@@ -35,6 +35,63 @@
         <div class="card">
             <h3>المعروض النقدي M2 (M2 Money Supply)</h3>
             
+            <div class="animated-chart">
+                <div class="chart-title">M2 Money Supply - تأثيره على السوق</div>
+                <svg class="order-chart" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="50" y1="30" x2="50" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Labels -->
+                    <text x="30" y="80" font-size="10" fill="#666">عالي</text>
+                    <text x="30" y="140" font-size="10" fill="#666">متوسط</text>
+                    <text x="30" y="190" font-size="10" fill="#666">منخفض</text>
+                    
+                    <!-- M2 Increasing Animation -->
+                    <rect x="80" y="150" width="40" height="50" fill="#667eea" opacity="0.7">
+                        <animate attributeName="y" values="150;80;150" dur="6s" repeatCount="indefinite"/>
+                        <animate attributeName="height" values="50;120;50" dur="6s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="100" y="215" font-size="9" fill="#667eea" text-anchor="middle">M2</text>
+                    
+                    <!-- Stock Market Response -->
+                    <polyline points="150,140 200,120 250,90 300,80 350,85" fill="none" stroke="#28a745" stroke-width="3" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1;0" dur="6s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Arrows -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="6s" repeatCount="indefinite"/>
+                        <line x1="130" y1="120" x2="145" y2="120" stroke="#ffc107" stroke-width="2" marker-end="url(#arrow-m2)"/>
+                        <text x="137" y="115" font-size="10" fill="#ffc107">تأثير</text>
+                    </g>
+                    
+                    <text x="250" y="70" font-size="11" fill="#28a745" font-weight="bold" opacity="0">
+                        <animate attributeName="opacity" values="0;0;0;1;0" dur="6s" repeatCount="indefinite"/>
+                        سوق الأسهم يرتفع
+                    </text>
+                    
+                    <!-- Money Icons -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;0;1" dur="6s" repeatCount="indefinite"/>
+                        <text x="100" y="120" font-size="20" text-anchor="middle">💵</text>
+                        <text x="100" y="95" font-size="20" text-anchor="middle">💵</text>
+                        <text x="85" y="108" font-size="20" text-anchor="middle">💵</text>
+                        <text x="115" y="108" font-size="20" text-anchor="middle">💵</text>
+                    </g>
+                    
+                    <defs>
+                        <marker id="arrow-m2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0,0 0,6 9,3" fill="#ffc107"/>
+                        </marker>
+                    </defs>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> مستوى M2 (يرتفع)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> سوق الأسهم (يتبع الارتفاع)</span>
+                </div>
+            </div>
+            
             <p><strong>إيه هو؟</strong> M2 هو مقياس للفلوس الموجودة في الاقتصاد. بيشمل النقدية في الجيوب والحسابات البنكية، بالإضافة للودائع قصيرة الأجل والحسابات اللي سهل تسييلها.</p>
             
             <p><strong>ليه مهم للأسواق المالية؟</strong></p>
@@ -54,6 +111,60 @@
 
         <div class="card">
             <h3>نسبة السعر للربح P/E Ratio (Price-to-Earnings)</h3>
+            
+            <div class="animated-chart">
+                <div class="chart-title">P/E Ratio - مقارنة التقييم</div>
+                <svg class="order-chart" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Stock A: High P/E -->
+                    <g>
+                        <rect x="100" y="80" width="60" height="120" fill="#dc3545" opacity="0.7"/>
+                        <text x="130" y="70" font-size="10" fill="#dc3545" font-weight="bold" text-anchor="middle">سهم A</text>
+                        <text x="130" y="215" font-size="11" fill="#dc3545" font-weight="bold" text-anchor="middle">P/E = 30</text>
+                        <text x="130" y="228" font-size="8" fill="#dc3545" text-anchor="middle">غالي/نمو متوقع</text>
+                    </g>
+                    
+                    <!-- Stock B: Moderate P/E -->
+                    <g>
+                        <rect x="180" y="120" width="60" height="80" fill="#ffc107" opacity="0.7"/>
+                        <text x="210" y="110" font-size="10" fill="#ffc107" font-weight="bold" text-anchor="middle">سهم B</text>
+                        <text x="210" y="215" font-size="11" fill="#ffc107" font-weight="bold" text-anchor="middle">P/E = 15</text>
+                        <text x="210" y="228" font-size="8" fill="#ffc107" text-anchor="middle">متوازن</text>
+                    </g>
+                    
+                    <!-- Stock C: Low P/E -->
+                    <g>
+                        <rect x="260" y="160" width="60" height="40" fill="#28a745" opacity="0.7"/>
+                        <text x="290" y="150" font-size="10" fill="#28a745" font-weight="bold" text-anchor="middle">سهم C</text>
+                        <text x="290" y="215" font-size="11" fill="#28a745" font-weight="bold" text-anchor="middle">P/E = 8</text>
+                        <text x="290" y="228" font-size="8" fill="#28a745" text-anchor="middle">رخيص/قيمة</text>
+                    </g>
+                    
+                    <!-- Price Label -->
+                    <text x="30" y="90" font-size="9" fill="#666">سعر</text>
+                    <text x="30" y="100" font-size="9" fill="#666">عالي</text>
+                    
+                    <!-- Animation: Highlight each stock -->
+                    <rect x="95" y="75" width="70" height="160" fill="none" stroke="#667eea" stroke-width="3" opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;1" dur="9s" repeatCount="indefinite"/>
+                        <animate attributeName="x" values="95;175;255;95" dur="9s" repeatCount="indefinite"/>
+                        <animate attributeName="width" values="70;70;70;70" dur="9s" repeatCount="indefinite"/>
+                    </rect>
+                    
+                    <!-- Formula -->
+                    <rect x="70" y="30" width="260" height="30" fill="#f0f0f0" rx="5"/>
+                    <text x="200" y="48" font-size="12" fill="#333" text-anchor="middle" font-weight="bold">
+                        P/E = سعر السهم ÷ ربحية السهم
+                    </text>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> P/E عالية (غالي)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ffc107;"></span> P/E متوسطة (متوازن)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> P/E منخفضة (رخيص)</span>
+                </div>
+            </div>
             
             <p><strong>إيه هي؟</strong> نسبة P/E بتقيس سعر السهم مقارنة بأرباح الشركة. بتتحسب بقسمة سعر السهم على ربحية السهم الواحد (EPS).</p>
             
@@ -76,6 +187,73 @@
         <div class="card">
             <h3>أسعار الفائدة (Interest Rates)</h3>
             
+            <div class="animated-chart">
+                <div class="chart-title">Interest Rates - العلاقة العكسية مع الأسهم</div>
+                <svg class="order-chart" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="50" y1="30" x2="50" y2="220" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="220" x2="380" y2="220" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Interest Rate Line (Going Up) -->
+                    <polyline points="70,180 120,160 170,130 220,100 270,80 320,70" fill="none" stroke="#dc3545" stroke-width="3">
+                        <animate attributeName="points" 
+                                 values="70,180 120,180 170,180 220,180 270,180 320,180;
+                                         70,180 120,160 170,130 220,100 270,80 320,70;
+                                         70,180 120,180 170,180 220,180 270,180 320,180" 
+                                 dur="8s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Stock Market Line (Going Down) -->
+                    <polyline points="70,100 120,100 170,100 220,100 270,100 320,100" fill="none" stroke="#667eea" stroke-width="3">
+                        <animate attributeName="points" 
+                                 values="70,100 120,100 170,100 220,100 270,100 320,100;
+                                         70,100 120,110 170,125 220,145 270,160 320,170;
+                                         70,100 120,100 170,100 220,100 270,100 320,100" 
+                                 dur="8s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Labels -->
+                    <text x="25" y="80" font-size="10" fill="#666">عالي</text>
+                    <text x="25" y="130" font-size="10" fill="#666">متوسط</text>
+                    <text x="25" y="180" font-size="10" fill="#666">منخفض</text>
+                    
+                    <!-- Interest Rate Label -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                        <text x="330" y="75" font-size="11" fill="#dc3545" font-weight="bold">الفائدة ↑</text>
+                        <text x="325" y="88" font-size="8" fill="#dc3545">ارتفعت لـ 6%</text>
+                    </g>
+                    
+                    <!-- Stock Market Label -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                        <text x="330" y="165" font-size="11" fill="#667eea" font-weight="bold">الأسهم ↓</text>
+                        <text x="325" y="178" font-size="8" fill="#667eea">انخفضت</text>
+                    </g>
+                    
+                    <!-- Central Bank Icon -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;1" dur="8s" repeatCount="indefinite"/>
+                        <rect x="160" y="35" width="80" height="50" fill="#f0f0f0" stroke="#333" stroke-width="2" rx="3"/>
+                        <text x="200" y="55" font-size="18" text-anchor="middle">🏛️</text>
+                        <text x="200" y="75" font-size="8" text-anchor="middle" fill="#333">البنك المركزي</text>
+                    </g>
+                    
+                    <!-- Arrows showing inverse relationship -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0.7;0.7;0" dur="8s" repeatCount="indefinite"/>
+                        <line x1="200" y1="85" x2="220" y2="105" stroke="#ffc107" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="225" y="98" font-size="9" fill="#ffc107" font-weight="bold">علاقة عكسية</text>
+                    </g>
+                    
+                    <text x="200" y="245" font-size="10" fill="#666" text-anchor="middle">الفائدة ↑ = الأسهم ↓  |  الفائدة ↓ = الأسهم ↑</text>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> سعر الفائدة (يرتفع)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> سوق الأسهم (ينخفض)</span>
+                </div>
+            </div>
+            
             <p><strong>إيه هي؟</strong> سعر الفايدة هو تكلفة الاقتراض أو العائد على الإيداع. البنوك المركزية (زي الفيدرالي الأمريكي أو البنك المركزي المصري) بتحدد سعر الفايدة الأساسي.</p>
             
             <p><strong>ليه مهمة للأسواق المالية؟</strong></p>
@@ -96,6 +274,79 @@
 
         <div class="card">
             <h3>معدل التضخم (Inflation Rate)</h3>
+            
+            <div class="animated-chart">
+                <div class="chart-title">Inflation Rate - تآكل القوة الشرائية</div>
+                <svg class="order-chart" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Timeline -->
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <text x="50" y="220" font-size="9" fill="#666">2020</text>
+                    <text x="200" y="220" font-size="9" fill="#666">2023</text>
+                    <text x="350" y="220" font-size="9" fill="#666">2026</text>
+                    
+                    <!-- Shopping basket getting more expensive -->
+                    <g opacity="1">
+                        <animate attributeName="opacity" values="1;0.3;0.3;1" dur="10s" repeatCount="indefinite"/>
+                        <text x="80" y="150" font-size="40">🛒</text>
+                        <text x="80" y="175" font-size="11" fill="#28a745" font-weight="bold" text-anchor="middle">100 ج</text>
+                        <rect x="60" y="125" width="40" height="70" fill="none" stroke="#28a745" stroke-width="2" rx="5"/>
+                    </g>
+                    
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="10s" repeatCount="indefinite"/>
+                        <text x="200" y="130" font-size="40">🛒</text>
+                        <text x="200" y="155" font-size="11" fill="#ffc107" font-weight="bold" text-anchor="middle">120 ج</text>
+                        <rect x="180" y="105" width="40" height="70" fill="none" stroke="#ffc107" stroke-width="2" rx="5"/>
+                        <text x="200" y="90" font-size="10" fill="#ffc107" text-anchor="middle">تضخم 20%</text>
+                    </g>
+                    
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1" dur="10s" repeatCount="indefinite"/>
+                        <text x="320" y="110" font-size="40">🛒</text>
+                        <text x="320" y="135" font-size="11" fill="#dc3545" font-weight="bold" text-anchor="middle">145 ج</text>
+                        <rect x="300" y="85" width="40" height="70" fill="none" stroke="#dc3545" stroke-width="2" rx="5"/>
+                        <text x="320" y="70" font-size="10" fill="#dc3545" text-anchor="middle">تضخم 45%</text>
+                    </g>
+                    
+                    <!-- Money value decreasing -->
+                    <g>
+                        <text x="100" y="40" font-size="12" fill="#333" font-weight="bold">قيمة 100 جنيه:</text>
+                        
+                        <circle cx="120" cy="60" r="20" fill="#28a745" opacity="0.8">
+                            <animate attributeName="r" values="20;15;10;20" dur="10s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;0.6;0.4;0.8" dur="10s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="120" y="65" font-size="11" fill="white" font-weight="bold" text-anchor="middle">2020</text>
+                        
+                        <circle cx="200" cy="60" r="15" fill="#ffc107" opacity="0.6">
+                            <animate attributeName="r" values="15;15;10;15" dur="10s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="200" y="65" font-size="10" fill="white" font-weight="bold" text-anchor="middle">2023</text>
+                        
+                        <circle cx="280" cy="60" r="10" fill="#dc3545" opacity="0.4">
+                            <animate attributeName="r" values="10;10;10;10" dur="10s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="280" y="65" font-size="9" fill="white" font-weight="bold" text-anchor="middle">2026</text>
+                    </g>
+                    
+                    <!-- Inflation arrow -->
+                    <line x1="140" y1="50" x2="260" y2="50" stroke="#dc3545" stroke-width="2" marker-end="url(#arrow-inflation)"/>
+                    <text x="200" y="45" font-size="9" fill="#dc3545" text-anchor="middle">التضخم يقلل القيمة</text>
+                    
+                    <text x="200" y="245" font-size="10" fill="#666" text-anchor="middle">نفس الفلوس تشتري أقل مع الوقت</text>
+                    
+                    <defs>
+                        <marker id="arrow-inflation" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0,0 0,6 9,3" fill="#dc3545"/>
+                        </marker>
+                    </defs>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> قوة شرائية كاملة</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ffc107;"></span> قوة شرائية متوسطة</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> قوة شرائية منخفضة</span>
+                </div>
+            </div>
             
             <p><strong>إيه هو؟</strong> معدل التضخم بيقيس الزيادة في أسعار السلع والخدمات مع الوقت. بيتحسب عادة بناءً على سلة من المنتجات الأساسية.</p>
             
@@ -118,6 +369,95 @@
         <div class="card">
             <h3>الناتج المحلي الإجمالي GDP (Gross Domestic Product)</h3>
             
+            <div class="animated-chart">
+                <div class="chart-title">GDP Growth - نمو الاقتصاد والأسهم</div>
+                <svg class="order-chart" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="50" y1="30" x2="50" y2="210" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="210" x2="380" y2="210" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Y-axis labels -->
+                    <text x="20" y="60" font-size="9" fill="#666">+6%</text>
+                    <text x="20" y="100" font-size="9" fill="#666">+4%</text>
+                    <text x="20" y="140" font-size="9" fill="#666">+2%</text>
+                    <text x="20" y="180" font-size="9" fill="#666">0%</text>
+                    <text x="20" y="205" font-size="9" fill="#666">-2%</text>
+                    
+                    <!-- Quarters -->
+                    <text x="90" y="230" font-size="9" fill="#666">Q1</text>
+                    <text x="160" y="230" font-size="9" fill="#666">Q2</text>
+                    <text x="230" y="230" font-size="9" fill="#666">Q3</text>
+                    <text x="300" y="230" font-size="9" fill="#666">Q4</text>
+                    
+                    <!-- GDP Bars -->
+                    <rect x="80" y="140" width="30" height="70" fill="#ffc107" opacity="0.8">
+                        <animate attributeName="y" values="180;140;180" dur="8s" repeatCount="indefinite"/>
+                        <animate attributeName="height" values="30;70;30" dur="8s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="95" y="235" font-size="9" fill="#ffc107" text-anchor="middle">+2%</text>
+                    
+                    <rect x="150" y="100" width="30" height="110" fill="#28a745" opacity="0.8">
+                        <animate attributeName="y" values="180;100;180" dur="8s" repeatCount="indefinite"/>
+                        <animate attributeName="height" values="30;110;30" dur="8s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="165" y="235" font-size="9" fill="#28a745" text-anchor="middle">+5%</text>
+                    
+                    <rect x="220" y="60" width="30" height="150" fill="#28a745" opacity="0.8">
+                        <animate attributeName="y" values="180;60;180" dur="8s" repeatCount="indefinite"/>
+                        <animate attributeName="height" values="30;150;30" dur="8s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="235" y="235" font-size="9" fill="#28a745" text-anchor="middle">+6%</text>
+                    
+                    <rect x="290" y="120" width="30" height="90" fill="#ffc107" opacity="0.8">
+                        <animate attributeName="y" values="180;120;180" dur="8s" repeatCount="indefinite"/>
+                        <animate attributeName="height" values="30;90;30" dur="8s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="305" y="235" font-size="9" fill="#ffc107" text-anchor="middle">+3%</text>
+                    
+                    <!-- Stock Market Line -->
+                    <polyline points="95,170 165,130 235,90 305,140" fill="none" stroke="#667eea" stroke-width="3">
+                        <animate attributeName="points" 
+                                 values="95,180 165,180 235,180 305,180;
+                                         95,170 165,130 235,90 305,140;
+                                         95,180 165,180 235,180 305,180" 
+                                 dur="8s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Stock Market Points -->
+                    <circle cx="95" cy="170" r="4" fill="#667eea">
+                        <animate attributeName="cy" values="180;170;180" dur="8s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="165" cy="130" r="4" fill="#667eea">
+                        <animate attributeName="cy" values="180;130;180" dur="8s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="235" cy="90" r="4" fill="#667eea">
+                        <animate attributeName="cy" values="180;90;180" dur="8s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="305" cy="140" r="4" fill="#667eea">
+                        <animate attributeName="cy" values="180;140;180" dur="8s" repeatCount="indefinite"/>
+                    </circle>
+                    
+                    <!-- Labels -->
+                    <text x="200" y="25" font-size="11" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;0" dur="8s" repeatCount="indefinite"/>
+                        نمو قوي في الاقتصاد = أسهم صاعدة
+                    </text>
+                    
+                    <rect x="270" y="45" width="100" height="25" fill="#f0f0f0" rx="5" opacity="0">
+                        <animate attributeName="opacity" values="0;0.9;0.9;0" dur="8s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="320" y="62" font-size="10" fill="#667eea" font-weight="bold" text-anchor="middle" opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                        مؤشر الأسهم
+                    </text>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> نمو GDP قوي (+5% أو أكثر)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ffc107;"></span> نمو GDP معتدل</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> سوق الأسهم (يتبع النمو)</span>
+                </div>
+            </div>
+            
             <p><strong>إيه هو؟</strong> GDP هو إجمالي قيمة كل السلع والخدمات اللي الدولة بتنتجها في فترة معينة (عادة ربع سنوي أو سنوي). بيقيس حجم ونمو الاقتصاد.</p>
             
             <p><strong>ليه مهم للأسواق المالية؟</strong></p>
@@ -139,6 +479,85 @@
         <div class="card">
             <h3>معدل البطالة (Unemployment Rate)</h3>
             
+            <div class="animated-chart">
+                <div class="chart-title">Unemployment Rate - العلاقة العكسية مع الأسهم</div>
+                <svg class="order-chart" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="50" y1="30" x2="50" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Y-axis -->
+                    <text x="25" y="70" font-size="9" fill="#666">12%</text>
+                    <text x="25" y="110" font-size="9" fill="#666">8%</text>
+                    <text x="25" y="150" font-size="9" fill="#666">4%</text>
+                    <text x="25" y="190" font-size="9" fill="#666">2%</text>
+                    
+                    <!-- Unemployment Line (Going Down) -->
+                    <polyline points="70,80 130,100 190,130 250,160 310,180" fill="none" stroke="#dc3545" stroke-width="3">
+                        <animate attributeName="points" 
+                                 values="70,80 130,80 190,80 250,80 310,80;
+                                         70,80 130,100 190,130 250,160 310,180;
+                                         70,80 130,80 190,80 250,80 310,80" 
+                                 dur="8s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Stock Market Line (Going Up) -->
+                    <polyline points="70,160 130,140 190,110 250,80 310,60" fill="none" stroke="#28a745" stroke-width="3">
+                        <animate attributeName="points" 
+                                 values="70,160 130,160 190,160 250,160 310,160;
+                                         70,160 130,140 190,110 250,80 310,60;
+                                         70,160 130,160 190,160 250,160 310,160" 
+                                 dur="8s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Time labels -->
+                    <text x="70" y="220" font-size="9" fill="#666" text-anchor="middle">2020</text>
+                    <text x="190" y="220" font-size="9" fill="#666" text-anchor="middle">2023</text>
+                    <text x="310" y="220" font-size="9" fill="#666" text-anchor="middle">2026</text>
+                    
+                    <!-- People icons showing employment improving -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;1" dur="8s" repeatCount="indefinite"/>
+                        <text x="90" y="50" font-size="16">👤❌👤❌👤❌</text>
+                        <text x="100" y="65" font-size="9" fill="#dc3545" text-anchor="middle">بطالة عالية</text>
+                    </g>
+                    
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                        <text x="210" y="50" font-size="16">👤✓👤✓👤❌</text>
+                        <text x="220" y="65" font-size="9" fill="#ffc107" text-anchor="middle">بطالة متوسطة</text>
+                    </g>
+                    
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1" dur="8s" repeatCount="indefinite"/>
+                        <text x="270" y="30" font-size="16">👤✓👤✓👤✓</text>
+                        <text x="280" y="45" font-size="9" fill="#28a745" text-anchor="middle">توظيف كامل</text>
+                    </g>
+                    
+                    <!-- Labels -->
+                    <text x="330" y="185" font-size="10" fill="#dc3545" font-weight="bold" opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                        البطالة ↓
+                    </text>
+                    
+                    <text x="330" y="65" font-size="10" fill="#28a745" font-weight="bold" opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                        الأسهم ↑
+                    </text>
+                    
+                    <!-- Relationship indicator -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0.8;0.8;0" dur="8s" repeatCount="indefinite"/>
+                        <rect x="140" y="230" width="120" height="22" fill="#f0f0f0" rx="5"/>
+                        <text x="200" y="245" font-size="10" fill="#333" font-weight="bold" text-anchor="middle">علاقة عكسية قوية</text>
+                    </g>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> معدل البطالة (ينخفض)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> سوق الأسهم (يرتفع)</span>
+                </div>
+            </div>
+            
             <p><strong>إيه هو؟</strong> معدل البطالة بيقيس نسبة الناس اللي عايزين يشتغلوا لكن مش لاقيين شغل، من إجمالي القوى العاملة.</p>
             
             <p><strong>ليه مهم للأسواق المالية؟</strong></p>
@@ -159,6 +578,102 @@
 
         <div class="card">
             <h3>مؤشر الخوف والطمع (Fear & Greed Index)</h3>
+            
+            <div class="animated-chart">
+                <div class="chart-title">Fear & Greed Index - مقياس مشاعر السوق</div>
+                <svg class="order-chart" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Semi-circle gauge -->
+                    <path d="M 80 180 A 120 120 0 0 1 320 180" fill="none" stroke="#e0e0e0" stroke-width="30"/>
+                    
+                    <!-- Fear section (red) -->
+                    <path d="M 80 180 A 120 120 0 0 1 140 95" fill="none" stroke="#dc3545" stroke-width="30"/>
+                    
+                    <!-- Neutral section (yellow) -->
+                    <path d="M 140 95 A 120 120 0 0 1 260 95" fill="none" stroke="#ffc107" stroke-width="30"/>
+                    
+                    <!-- Greed section (green) -->
+                    <path d="M 260 95 A 120 120 0 0 1 320 180" fill="none" stroke="#28a745" stroke-width="30"/>
+                    
+                    <!-- Needle -->
+                    <line x1="200" y1="180" x2="200" y2="70" stroke="#333" stroke-width="4">
+                        <animateTransform attributeName="transform"
+                                          type="rotate"
+                                          values="-90 200 180; 0 200 180; 90 200 180; 0 200 180; -90 200 180"
+                                          dur="12s"
+                                          repeatCount="indefinite"/>
+                    </line>
+                    <circle cx="200" cy="180" r="8" fill="#333"/>
+                    
+                    <!-- Labels -->
+                    <text x="70" y="200" font-size="11" fill="#dc3545" font-weight="bold">خوف</text>
+                    <text x="70" y="212" font-size="8" fill="#dc3545">0-25</text>
+                    
+                    <text x="190" y="75" font-size="11" fill="#ffc107" font-weight="bold" text-anchor="middle">محايد</text>
+                    <text x="190" y="87" font-size="8" fill="#ffc107" text-anchor="middle">45-55</text>
+                    
+                    <text x="310" y="200" font-size="11" fill="#28a745" font-weight="bold" text-anchor="end">طمع</text>
+                    <text x="310" y="212" font-size="8" fill="#28a745" text-anchor="end">75-100</text>
+                    
+                    <!-- Current reading -->
+                    <rect x="150" y="190" width="100" height="30" fill="#f0f0f0" rx="5"/>
+                    <text x="200" y="208" font-size="14" fill="#333" font-weight="bold" text-anchor="middle">
+                        <animate attributeName="fill" values="#dc3545;#ffc107;#28a745;#ffc107;#dc3545" dur="12s" repeatCount="indefinite"/>
+                        <animate values="25;50;75;50;25" dur="12s" repeatCount="indefinite">25</animate>
+                    </text>
+                    
+                    <!-- Status text -->
+                    <text x="200" y="240" font-size="12" font-weight="bold" text-anchor="middle">
+                        <animate attributeName="fill" values="#dc3545;#ffc107;#28a745;#ffc107;#dc3545" dur="12s" repeatCount="indefinite"/>
+                        <tspan>
+                            <animate attributeName="opacity" values="1;0;0;0;1" dur="12s" repeatCount="indefinite"/>
+                            😨 خوف شديد - فرصة شراء
+                        </tspan>
+                        <tspan opacity="0">
+                            <animate attributeName="opacity" values="0;1;0;0;0" dur="12s" repeatCount="indefinite"/>
+                            😐 محايد - سوق متوازن
+                        </tspan>
+                        <tspan opacity="0">
+                            <animate attributeName="opacity" values="0;0;1;0;0" dur="12s" repeatCount="indefinite"/>
+                            🤑 طمع شديد - خطر فقاعة
+                        </tspan>
+                    </text>
+                    
+                    <!-- Strategy advice -->
+                    <rect x="50" y="250" width="300" height="20" fill="#e3f2fd" rx="5" opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;0;1" dur="12s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="200" y="264" font-size="10" fill="#1976d2" text-anchor="middle" opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;0;1" dur="12s" repeatCount="indefinite"/>
+                        💡 "كن طماع لما الناس خايفين"
+                    </text>
+                    
+                    <rect x="50" y="250" width="300" height="20" fill="#fff3e0" rx="5" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;0;0" dur="12s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="200" y="264" font-size="10" fill="#ff6f00" text-anchor="middle" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;0;0" dur="12s" repeatCount="indefinite"/>
+                        ⚠️ "كن خايف لما الناس طمعانين"
+                    </text>
+                    
+                    <!-- Market examples -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;1" dur="12s" repeatCount="indefinite"/>
+                        <text x="50" y="35" font-size="9" fill="#dc3545">مثال: أزمة كورونا مارس 2020</text>
+                        <text x="50" y="48" font-size="8" fill="#dc3545">المؤشر: 12 (خوف شديد) ← فرصة ذهبية</text>
+                    </g>
+                    
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;0" dur="12s" repeatCount="indefinite"/>
+                        <text x="230" y="35" font-size="9" fill="#28a745">مثال: نهاية 2021</text>
+                        <text x="230" y="48" font-size="8" fill="#28a745">المؤشر: 85 (طمع) ← تصحيح قادم</text>
+                    </g>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> خوف شديد (0-25): فرصة شراء</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ffc107;"></span> محايد (45-55): سوق متوازن</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> طمع شديد (75-100): حذر من الفقاعة</span>
+                </div>
+            </div>
             
             <p><strong>إيه هو؟</strong> مؤشر الخوف والطمع هو مقياس بيحاول يقيس المشاعر السائدة في سوق الأسهم. بيتراوح من 0 (خوف شديد) لـ 100 (طمع شديد)، وبيستخدم مجموعة من المؤشرات الفنية والأساسية عشان يحدد هل المستثمرين خايفين جداً ولا طمعانين جداً.</p>
             
