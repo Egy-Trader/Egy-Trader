@@ -35,6 +35,51 @@
         <div class="card">
             <h3>1. أمر السوق (Market Order)</h3>
             
+            <div class="animated-chart">
+                <div class="chart-title">Market Order - التنفيذ الفوري</div>
+                <svg class="order-chart" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid Lines -->
+                    <line x1="50" y1="30" x2="50" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Price Labels -->
+                    <text x="30" y="60" font-size="12" fill="#666">110</text>
+                    <text x="30" y="100" font-size="12" fill="#666">105</text>
+                    <text x="30" y="140" font-size="12" fill="#666">100</text>
+                    <text x="30" y="180" font-size="12" fill="#666">95</text>
+                    
+                    <!-- Price Line -->
+                    <polyline class="price-line" points="50,120 100,110 150,130 200,115 250,125 300,140 350,130" 
+                              fill="none" stroke="#667eea" stroke-width="2"/>
+                    
+                    <!-- Current Price Marker -->
+                    <circle class="current-price" cx="350" cy="130" r="5" fill="#667eea"/>
+                    <text x="355" y="135" font-size="12" fill="#667eea" font-weight="bold">سعر حالي</text>
+                    
+                    <!-- Market Order Arrow -->
+                    <g class="market-order-arrow">
+                        <line x1="200" y1="30" x2="200" y2="125" stroke="#28a745" stroke-width="3" stroke-dasharray="5,5">
+                            <animate attributeName="y2" from="30" to="125" dur="1.5s" repeatCount="indefinite"/>
+                        </line>
+                        <polygon points="200,125 195,115 205,115" fill="#28a745">
+                            <animate attributeName="points" 
+                                     values="200,30 195,40 205,40;200,125 195,115 205,115;200,30 195,40 205,40" 
+                                     dur="1.5s" repeatCount="indefinite"/>
+                        </polygon>
+                        <text x="210" y="70" font-size="14" fill="#28a745" font-weight="bold">تنفيذ فوري!</text>
+                    </g>
+                    
+                    <!-- Execution Point -->
+                    <circle class="execution-point" cx="200" cy="125" r="8" fill="none" stroke="#28a745" stroke-width="2">
+                        <animate attributeName="r" values="8;12;8" dur="1s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> حركة السعر</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> أمر السوق (ينفذ فوراً)</span>
+                </div>
+            </div>
+            
             <p><strong>إيه هو؟</strong> أمر السوق هو أبسط نوع من الأوامر. بتطلب من الوسيط ينفذ عملية الشراء أو البيع <strong>فوراً</strong> بأفضل سعر متاح في السوق حالياً.</p>
             
             <p><strong>إزاي بيشتغل؟</strong></p>
@@ -63,6 +108,58 @@
 
         <div class="card">
             <h3>2. أمر محدد السعر (Limit Order)</h3>
+            
+            <div class="animated-chart">
+                <div class="chart-title">Limit Order - انتظار السعر المحدد</div>
+                <svg class="order-chart" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid Lines -->
+                    <line x1="50" y1="30" x2="50" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Price Labels -->
+                    <text x="30" y="60" font-size="12" fill="#666">110</text>
+                    <text x="30" y="100" font-size="12" fill="#666">105</text>
+                    <text x="30" y="140" font-size="12" fill="#666">100</text>
+                    <text x="30" y="180" font-size="12" fill="#666">95</text>
+                    
+                    <!-- Limit Price Line -->
+                    <line x1="50" y1="160" x2="380" y2="160" stroke="#ffc107" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="320" y="155" font-size="12" fill="#ffc107" font-weight="bold">السعر المحدد</text>
+                    
+                    <!-- Price Line with Animation -->
+                    <polyline class="price-line-limit" points="50,120 100,130 150,145 200,140 250,150 300,158 350,165" 
+                              fill="none" stroke="#667eea" stroke-width="2">
+                        <animate attributeName="points" 
+                                 values="50,120 100,130 150,145 200,140 250,150 300,158 350,165;
+                                         50,120 100,130 150,145 200,140 250,150 300,160 350,158;
+                                         50,120 100,130 150,145 200,140 250,150 300,158 350,165" 
+                                 dur="4s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Waiting Order Icon -->
+                    <g class="limit-order-waiting">
+                        <circle cx="200" cy="160" r="10" fill="none" stroke="#ffc107" stroke-width="2">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="175" y="185" font-size="12" fill="#ffc107">في انتظار...</text>
+                    </g>
+                    
+                    <!-- Execution Point when price touches limit -->
+                    <circle cx="300" cy="160" r="8" fill="#28a745" opacity="0">
+                        <animate attributeName="opacity" values="0;0;0;1;1;0" dur="4s" repeatCount="indefinite"/>
+                        <animate attributeName="r" values="8;12;8" dur="1s" repeatCount="indefinite"/>
+                    </circle>
+                    <text x="280" y="175" font-size="12" fill="#28a745" font-weight="bold" opacity="0">
+                        <animate attributeName="opacity" values="0;0;0;1;1;0" dur="4s" repeatCount="indefinite"/>
+                        تنفيذ!
+                    </text>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> حركة السعر</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ffc107;"></span> السعر المحدد للتنفيذ</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> التنفيذ عند الوصول</span>
+                </div>
+            </div>
             
             <p><strong>إيه هو؟</strong> أمر محدد السعر بيسمح لك تحدد السعر الأقصى اللي مستعد تشتري بيه، أو السعر الأدنى اللي مستعد تبيع بيه. الأمر <strong>مش هينفذ</strong> إلا لو السوق وصل للسعر ده أو أحسن منه.</p>
             
@@ -94,6 +191,89 @@
         <div class="card">
             <h3>3. أمر إيقاف محدد (Stop Limit Order)</h3>
             
+            <div class="animated-chart">
+                <div class="chart-title">Stop Limit Order - تفعيل ثم تنفيذ محدد</div>
+                <svg class="order-chart" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid Lines -->
+                    <line x1="50" y1="30" x2="50" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Price Labels -->
+                    <text x="30" y="60" font-size="12" fill="#666">110</text>
+                    <text x="30" y="90" font-size="12" fill="#666">106</text>
+                    <text x="30" y="120" font-size="12" fill="#666">102</text>
+                    <text x="30" y="150" font-size="12" fill="#666">98</text>
+                    <text x="30" y="180" font-size="12" fill="#666">94</text>
+                    
+                    <!-- Stop Price Line (orange) -->
+                    <line x1="50" y1="120" x2="380" y2="120" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="8,4"/>
+                    <text x="280" y="115" font-size="11" fill="#ff6b6b" font-weight="bold">Stop Price: 102</text>
+                    
+                    <!-- Limit Price Line (green) -->
+                    <line x1="50" y1="140" x2="380" y2="140" stroke="#ffc107" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="280" y="135" font-size="11" fill="#ffc107" font-weight="bold">Limit Price: 100</text>
+                    
+                    <!-- Price Line Animation (going down) -->
+                    <polyline class="price-line-stop-limit" points="50,80 100,85 150,95 200,105 250,118 300,128 350,138" 
+                              fill="none" stroke="#667eea" stroke-width="2">
+                        <animate attributeName="points" 
+                                 values="50,80 100,85 150,95 200,105 250,110 300,115 350,110;
+                                         50,80 100,85 150,95 200,105 250,118 300,128 350,135;
+                                         50,80 100,85 150,95 200,105 250,118 300,130 350,140;
+                                         50,80 100,85 150,95 200,105 250,118 300,128 350,135;
+                                         50,80 100,85 150,95 200,105 250,110 300,115 350,110" 
+                                 dur="8s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Stage 1: Stop Trigger Animation -->
+                    <g class="stop-limit-stage1">
+                        <circle cx="250" cy="120" r="0" fill="#ff6b6b" opacity="0.6">
+                            <animate attributeName="r" values="0;0;12;12;0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="220" y="105" font-size="11" fill="#ff6b6b" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="0;0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                            ① تفعيل!
+                        </text>
+                    </g>
+                    
+                    <!-- Stage 2: Waiting for Limit -->
+                    <g class="stop-limit-stage2">
+                        <circle cx="280" cy="140" r="8" fill="none" stroke="#ffc107" stroke-width="2" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;1;1;1;0" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="r" values="8;10;8" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="250" y="160" font-size="11" fill="#ffc107" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;1;1;1;0" dur="8s" repeatCount="indefinite"/>
+                            ② انتظار السعر المحدد...
+                        </text>
+                    </g>
+                    
+                    <!-- Stage 3: Execution at Limit Price -->
+                    <g class="stop-limit-stage3">
+                        <circle cx="320" cy="140" r="0" fill="#28a745">
+                            <animate attributeName="r" values="0;0;0;0;0;15;0" dur="8s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="290" y="165" font-size="12" fill="#28a745" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;0;0;1;1;0" dur="8s" repeatCount="indefinite"/>
+                            ③ تنفيذ!
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow showing process flow -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0;0.5;0.5;0.5;0.5;0" dur="8s" repeatCount="indefinite"/>
+                        <line x1="250" y1="125" x2="280" y2="135" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                        <line x1="290" y1="145" x2="315" y2="145" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    </g>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> حركة السعر</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ff6b6b;"></span> Stop Price (التفعيل)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ffc107;"></span> Limit Price (التنفيذ)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> التنفيذ النهائي</span>
+                </div>
+            </div>
+            
             <p><strong>إيه هو؟</strong> أمر Stop Limit هو مزيج بين أمرين: Stop Order وLimit Order. بيتحول لأمر محدد السعر (Limit) لما السعر يوصل لسعر معين (Stop Price).</p>
             
             <p><strong>إزاي بيشتغل؟</strong></p>
@@ -121,6 +301,67 @@
 
         <div class="card">
             <h3>4. أمر إيقاف السوق (Stop Market Order)</h3>
+            
+            <div class="animated-chart">
+                <div class="chart-title">Stop Market Order - Stop Loss مثال</div>
+                <svg class="order-chart" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid Lines -->
+                    <line x1="50" y1="30" x2="50" y2="200" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="200" x2="380" y2="200" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Price Labels -->
+                    <text x="30" y="60" font-size="12" fill="#666">110</text>
+                    <text x="30" y="100" font-size="12" fill="#666">105</text>
+                    <text x="30" y="140" font-size="12" fill="#666">100</text>
+                    <text x="30" y="180" font-size="12" fill="#666">95</text>
+                    
+                    <!-- Entry Price -->
+                    <line x1="50" y1="120" x2="380" y2="120" stroke="#28a745" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="300" y="115" font-size="11" fill="#28a745">سعر الشراء: 100</text>
+                    
+                    <!-- Stop Price Line -->
+                    <line x1="50" y1="160" x2="380" y2="160" stroke="#dc3545" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="280" y="155" font-size="12" fill="#dc3545" font-weight="bold">Stop Loss: 95</text>
+                    
+                    <!-- Price Line Going Down -->
+                    <polyline class="price-line-stop" points="50,100 100,105 150,115 200,125 250,140 300,150 350,165" 
+                              fill="none" stroke="#667eea" stroke-width="2">
+                        <animate attributeName="points" 
+                                 values="50,100 100,105 150,115 200,125 250,140 300,150 350,155;
+                                         50,100 100,105 150,115 200,125 250,140 300,155 350,165;
+                                         50,100 100,105 150,115 200,125 250,140 300,150 350,155" 
+                                 dur="5s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Stop Trigger Animation -->
+                    <g class="stop-trigger">
+                        <circle cx="300" cy="160" r="0" fill="#dc3545">
+                            <animate attributeName="r" values="0;0;15;0" dur="5s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="260" y="185" font-size="13" fill="#dc3545" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="0;0;1;1;0" dur="5s" repeatCount="indefinite"/>
+                            تفعيل + تنفيذ فوري!
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow showing exit -->
+                    <line x1="320" y1="160" x2="320" y2="195" stroke="#dc3545" stroke-width="2" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1;0" dur="5s" repeatCount="indefinite"/>
+                    </line>
+                    <polygon points="320,195 315,185 325,185" fill="#dc3545" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1;0" dur="5s" repeatCount="indefinite"/>
+                    </polygon>
+                    <text x="295" y="215" font-size="11" fill="#dc3545" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1;0" dur="5s" repeatCount="indefinite"/>
+                        خروج من الصفقة
+                    </text>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> حركة السعر النازلة</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> سعر الدخول</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> Stop Loss (يتفعل وينفذ فوراً)</span>
+                </div>
+            </div>
             
             <p><strong>إيه هو؟</strong> أمر Stop Market بيتفعل لما السعر يوصل لنقطة معينة (Stop Price)، وبعدها بيتحول <strong>فوراً</strong> لأمر سوق (Market Order) وبينفذ بأفضل سعر متاح.</p>
             
@@ -153,6 +394,118 @@
 
         <div class="card">
             <h3>5. أمر الإيقاف المتحرك (Trailing Stop Order)</h3>
+            
+            <div class="animated-chart">
+                <div class="chart-title">Trailing Stop - يتحرك مع الربح ويثبت عند الانعكاس</div>
+                <svg class="order-chart" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid Lines -->
+                    <line x1="50" y1="30" x2="50" y2="220" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="220" x2="380" y2="220" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Price Labels -->
+                    <text x="25" y="60" font-size="11" fill="#666">120</text>
+                    <text x="25" y="90" font-size="11" fill="#666">115</text>
+                    <text x="25" y="120" font-size="11" fill="#666">110</text>
+                    <text x="25" y="150" font-size="11" fill="#666">105</text>
+                    <text x="25" y="180" font-size="11" fill="#666">100</text>
+                    <text x="25" y="210" font-size="11" fill="#666">95</text>
+                    
+                    <!-- Entry Price Line -->
+                    <line x1="50" y1="180" x2="100" y2="180" stroke="#28a745" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="55" y="175" font-size="10" fill="#28a745">دخول: 100</text>
+                    
+                    <!-- Price Line - Going Up then Down -->
+                    <polyline class="price-line-trailing" 
+                              points="70,180 100,170 130,140 160,120 190,100 220,90 250,95 280,110 310,125 340,140" 
+                              fill="none" stroke="#667eea" stroke-width="2.5">
+                        <animate attributeName="points" 
+                                 values="70,180 100,180 130,180 160,180 190,180 220,180 250,180 280,180 310,180 340,180;
+                                         70,180 100,170 130,150 160,130 190,110 220,95 250,95 280,95 310,95 340,95;
+                                         70,180 100,170 130,140 160,120 190,100 220,90 250,95 280,110 310,125 340,140;
+                                         70,180 100,170 130,140 160,120 190,100 220,90 250,95 280,110 310,125 340,140" 
+                                 dur="10s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Trailing Stop Line - Moves up with price, stays fixed when price drops -->
+                    <polyline class="trailing-stop-line" 
+                              points="70,210 100,210 130,210 160,210 190,210 220,210 250,210 280,210 310,210 340,210" 
+                              fill="none" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="5,5">
+                        <animate attributeName="points" 
+                                 values="70,210 100,210 130,210 160,210 190,210 220,210 250,210 280,210 310,210 340,210;
+                                         70,210 100,200 130,180 160,160 190,140 220,125 250,125 280,125 310,125 340,125;
+                                         70,210 100,200 130,170 160,150 190,130 220,120 250,120 280,120 310,120 340,120;
+                                         70,210 100,200 130,170 160,150 190,130 220,120 250,120 280,120 310,120 340,120" 
+                                 dur="10s" repeatCount="indefinite"/>
+                    </polyline>
+                    
+                    <!-- Stage Labels -->
+                    <g class="stage-label-1" opacity="0">
+                        <animate attributeName="opacity" values="0;1;1;0" dur="10s" repeatCount="indefinite"/>
+                        <text x="150" y="25" font-size="11" fill="#28a745" font-weight="bold">① السعر يصعد</text>
+                        <line x1="150" y1="160" x2="150" y2="135" stroke="#28a745" stroke-width="1.5" marker-end="url(#arrowup)">
+                            <animate attributeName="y2" values="160;135;135" dur="10s" repeatCount="indefinite"/>
+                        </line>
+                    </g>
+                    
+                    <g class="stage-label-2" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1;0" dur="10s" repeatCount="indefinite"/>
+                        <text x="200" y="25" font-size="11" fill="#ff6b6b" font-weight="bold">② Stop يتحرك لفوق</text>
+                        <line x1="200" y1="180" x2="200" y2="145" stroke="#ff6b6b" stroke-width="1.5">
+                            <animate attributeName="y1" values="210;140;130" dur="10s" repeatCount="indefinite"/>
+                            <animate attributeName="y2" values="205;135;125" dur="10s" repeatCount="indefinite"/>
+                        </line>
+                    </g>
+                    
+                    <g class="stage-label-3" opacity="0">
+                        <animate attributeName="opacity" values="0;0;0;1;1" dur="10s" repeatCount="indefinite"/>
+                        <text x="270" y="25" font-size="11" fill="#dc3545" font-weight="bold">③ السعر يرجع ويلمس Stop</text>
+                    </g>
+                    
+                    <!-- Price reaches highest point marker -->
+                    <circle cx="220" cy="90" r="0" fill="#28a745" opacity="0.5">
+                        <animate attributeName="r" values="0;0;8;8;0" dur="10s" repeatCount="indefinite"/>
+                    </circle>
+                    <text x="225" y="88" font-size="10" fill="#28a745" font-weight="bold" opacity="0">
+                        <animate attributeName="opacity" values="0;0;1;1;0" dur="10s" repeatCount="indefinite"/>
+                        أعلى سعر: 115
+                    </text>
+                    
+                    <!-- Execution Point -->
+                    <g class="execution-trailing" opacity="0">
+                        <animate attributeName="opacity" values="0;0;0;1;1" dur="10s" repeatCount="indefinite"/>
+                        <circle cx="340" cy="140" r="0" fill="#dc3545">
+                            <animate attributeName="r" values="0;0;0;15;0" dur="10s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="310" y="165" font-size="12" fill="#dc3545" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;1;1" dur="10s" repeatCount="indefinite"/>
+                            تنفيذ البيع!
+                        </text>
+                        <text x="300" y="250" font-size="11" fill="#28a745" font-weight="bold">
+                            ربح محمي: ~10 نقاط
+                        </text>
+                    </g>
+                    
+                    <!-- Distance indicator -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0.7;0.7;0" dur="10s" repeatCount="indefinite"/>
+                        <line x1="175" y1="120" x2="175" y2="150" stroke="#ffc107" stroke-width="1.5"/>
+                        <text x="180" y="138" font-size="9" fill="#ffc107">مسافة Stop</text>
+                    </g>
+                    
+                    <!-- Arrow markers definition -->
+                    <defs>
+                        <marker id="arrowup" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+                            <polygon points="5,0 10,10 0,10" fill="#28a745"/>
+                        </marker>
+                    </defs>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> حركة السعر</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> اتجاه الربح</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ff6b6b;"></span> Trailing Stop (يتحرك ويثبت)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> التنفيذ عند الانعكاس</span>
+                </div>
+            </div>
             
             <p><strong>إيه هو؟</strong> Trailing Stop هو أمر ذكي بيتحرك مع السعر في اتجاه الربح، لكن بيثبت عند نقطة معينة لو السعر رجع في الاتجاه المعاكس. بيساعدك تحمي أرباحك وتسيبها تكبر في نفس الوقت.</p>
             
@@ -188,6 +541,115 @@
         <div class="card">
             <h3>6. أمر الإلغاء المتبادل OCO (One Cancels the Other)</h3>
             
+            <div class="animated-chart">
+                <div class="chart-title">OCO Order - أمر ينفذ والآخر يُلغى</div>
+                <svg class="order-chart" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid Lines -->
+                    <line x1="50" y1="30" x2="50" y2="240" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="240" x2="380" y2="240" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Price Labels -->
+                    <text x="25" y="70" font-size="11" fill="#666">110</text>
+                    <text x="25" y="110" font-size="11" fill="#666">105</text>
+                    <text x="25" y="150" font-size="11" fill="#666">100</text>
+                    <text x="25" y="190" font-size="11" fill="#666">95</text>
+                    <text x="25" y="230" font-size="11" fill="#666">90</text>
+                    
+                    <!-- Entry Price Line -->
+                    <line x1="50" y1="150" x2="380" y2="150" stroke="#667eea" stroke-width="1.5" stroke-dasharray="3,3"/>
+                    <text x="55" y="145" font-size="10" fill="#667eea">دخول: 100</text>
+                    
+                    <!-- Take Profit Line -->
+                    <line x1="50" y1="110" x2="380" y2="110" stroke="#28a745" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="280" y="105" font-size="11" fill="#28a745" font-weight="bold">Take Profit: 105</text>
+                    
+                    <!-- Stop Loss Line -->
+                    <line x1="50" y1="190" x2="380" y2="190" stroke="#dc3545" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="280" y="185" font-size="11" fill="#dc3545" font-weight="bold">Stop Loss: 95</text>
+                    
+                    <!-- Scenario 1: Price goes UP to Take Profit -->
+                    <g class="scenario-1">
+                        <polyline points="70,150 120,145 170,135 220,125 270,115 320,110" 
+                                  fill="none" stroke="#28a745" stroke-width="2.5" opacity="0">
+                            <animate attributeName="opacity" values="1;1;0;0" dur="12s" repeatCount="indefinite"/>
+                        </polyline>
+                        
+                        <!-- Take Profit Execution -->
+                        <circle cx="320" cy="110" r="0" fill="#28a745">
+                            <animate attributeName="r" values="0;15;0;0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="280" y="95" font-size="12" fill="#28a745" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="0;1;1;0;0" dur="12s" repeatCount="indefinite"/>
+                            ✓ تنفيذ ربح!
+                        </text>
+                        
+                        <!-- Stop Loss Cancelled -->
+                        <g opacity="0">
+                            <animate attributeName="opacity" values="0;0.8;0.8;0;0" dur="12s" repeatCount="indefinite"/>
+                            <line x1="300" y1="185" x2="360" y2="195" stroke="#dc3545" stroke-width="2"/>
+                            <line x1="300" y1="195" x2="360" y2="185" stroke="#dc3545" stroke-width="2"/>
+                            <text x="295" y="210" font-size="10" fill="#dc3545">✗ ألغي</text>
+                        </g>
+                        
+                        <text x="150" y="25" font-size="12" fill="#28a745" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="1;1;0;0" dur="12s" repeatCount="indefinite"/>
+                            سيناريو 1: السعر يصعد → ربح 5%
+                        </text>
+                    </g>
+                    
+                    <!-- Scenario 2: Price goes DOWN to Stop Loss -->
+                    <g class="scenario-2">
+                        <polyline points="70,150 120,155 170,165 220,175 270,185 320,190" 
+                                  fill="none" stroke="#dc3545" stroke-width="2.5" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;1;1;0" dur="12s" repeatCount="indefinite"/>
+                        </polyline>
+                        
+                        <!-- Stop Loss Execution -->
+                        <circle cx="320" cy="190" r="0" fill="#dc3545">
+                            <animate attributeName="r" values="0;0;0;15;0;0" dur="12s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="270" y="205" font-size="12" fill="#dc3545" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;1;1;0" dur="12s" repeatCount="indefinite"/>
+                            ✓ تنفيذ حماية!
+                        </text>
+                        
+                        <!-- Take Profit Cancelled -->
+                        <g opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;0.8;0.8;0" dur="12s" repeatCount="indefinite"/>
+                            <line x1="300" y1="105" x2="360" y2="115" stroke="#28a745" stroke-width="2"/>
+                            <line x1="300" y1="115" x2="360" y2="105" stroke="#28a745" stroke-width="2"/>
+                            <text x="295" y="90" font-size="10" fill="#28a745">✗ ألغي</text>
+                        </g>
+                        
+                        <text x="145" y="25" font-size="12" fill="#dc3545" font-weight="bold" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;1;1;0" dur="12s" repeatCount="indefinite"/>
+                            سيناريو 2: السعر ينزل → خسارة 5%
+                        </text>
+                    </g>
+                    
+                    <!-- Starting Point Marker -->
+                    <circle cx="70" cy="150" r="5" fill="#667eea">
+                        <animate attributeName="opacity" values="1;1;1;1;1;1" dur="12s" repeatCount="indefinite"/>
+                    </circle>
+                    
+                    <!-- OCO Label -->
+                    <rect x="140" y="135" width="120" height="30" fill="#fff" stroke="#667eea" stroke-width="1.5" rx="5" opacity="0.9"/>
+                    <text x="200" y="153" font-size="11" fill="#667eea" font-weight="bold" text-anchor="middle">OCO: أمرين نشطين</text>
+                    
+                    <!-- Info boxes -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="1;1;0;0;0;0;1" dur="12s" repeatCount="indefinite"/>
+                        <rect x="80" y="255" width="240" height="18" fill="#e3f2fd" rx="3"/>
+                        <text x="200" y="268" font-size="10" fill="#1976d2" text-anchor="middle">كلا الأمرين نشطين في نفس الوقت</text>
+                    </g>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> سعر الدخول</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> Take Profit (هدف الربح)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> Stop Loss (وقف الخسارة)</span>
+                </div>
+            </div>
+            
             <p><strong>إيه هو؟</strong> أمر OCO هو أمر مزدوج بيسمح لك تحط أمرين في نفس الوقت، ولما واحد منهم ينفذ، التاني يتلغى تلقائياً. مفيد جداً لإدارة الصفقات بشكل احترافي.</p>
             
             <p><strong>إزاي بيشتغل؟</strong></p>
@@ -219,6 +681,156 @@
 
         <div class="card">
             <h3>7. الأوامر الخوارزمية (Algo Orders)</h3>
+            
+            <div class="animated-chart">
+                <div class="chart-title">Algo Order (TWAP) - تنفيذ تدريجي لأمر كبير</div>
+                <svg class="order-chart" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid Lines -->
+                    <line x1="50" y1="30" x2="50" y2="220" stroke="#ddd" stroke-width="2"/>
+                    <line x1="50" y1="220" x2="380" y2="220" stroke="#ddd" stroke-width="2"/>
+                    
+                    <!-- Price Labels -->
+                    <text x="25" y="70" font-size="11" fill="#666">103</text>
+                    <text x="25" y="110" font-size="11" fill="#666">102</text>
+                    <text x="25" y="150" font-size="11" fill="#666">101</text>
+                    <text x="25" y="190" font-size="11" fill="#666">100</text>
+                    
+                    <!-- Time Labels -->
+                    <text x="80" y="235" font-size="9" fill="#666">10:00</text>
+                    <text x="140" y="235" font-size="9" fill="#666">10:30</text>
+                    <text x="200" y="235" font-size="9" fill="#666">11:00</text>
+                    <text x="260" y="235" font-size="9" fill="#666">11:30</text>
+                    <text x="320" y="235" font-size="9" fill="#666">12:00</text>
+                    
+                    <!-- Price Line (stable with Algo) -->
+                    <polyline points="70,170 100,168 130,172 160,169 190,171 220,168 250,170 280,169 310,171 340,170" 
+                              fill="none" stroke="#667eea" stroke-width="2"/>
+                    
+                    <!-- Comparison: Large Market Order Impact (shown in background) -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0.3;0.3;0;0;0;0" dur="16s" repeatCount="indefinite"/>
+                        <polyline points="70,170 90,160 110,145 130,135 150,130 170,128" 
+                                  fill="none" stroke="#dc3545" stroke-width="1.5" stroke-dasharray="3,3"/>
+                        <text x="120" y="125" font-size="9" fill="#dc3545">أمر سوق كبير واحد</text>
+                        <text x="125" y="135" font-size="8" fill="#dc3545">(يحرك السعر!)</text>
+                    </g>
+                    
+                    <!-- Algo Order Executions (Small batches) -->
+                    <!-- Execution 1 -->
+                    <g class="algo-exec-1">
+                        <circle cx="100" cy="168" r="0" fill="#28a745" opacity="0.7">
+                            <animate attributeName="r" values="0;8;8;8;8;8;8;8" dur="16s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="100" y="155" font-size="8" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;1;1;1;1;1;1;1" dur="16s" repeatCount="indefinite"/>
+                            10K
+                        </text>
+                    </g>
+                    
+                    <!-- Execution 2 -->
+                    <g class="algo-exec-2">
+                        <circle cx="130" cy="172" r="0" fill="#28a745" opacity="0.7">
+                            <animate attributeName="r" values="0;0;8;8;8;8;8;8" dur="16s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="130" y="159" font-size="8" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;0;1;1;1;1;1;1" dur="16s" repeatCount="indefinite"/>
+                            10K
+                        </text>
+                    </g>
+                    
+                    <!-- Execution 3 -->
+                    <g class="algo-exec-3">
+                        <circle cx="160" cy="169" r="0" fill="#28a745" opacity="0.7">
+                            <animate attributeName="r" values="0;0;0;8;8;8;8;8" dur="16s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="160" y="156" font-size="8" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;1;1;1;1;1" dur="16s" repeatCount="indefinite"/>
+                            10K
+                        </text>
+                    </g>
+                    
+                    <!-- Execution 4 -->
+                    <g class="algo-exec-4">
+                        <circle cx="190" cy="171" r="0" fill="#28a745" opacity="0.7">
+                            <animate attributeName="r" values="0;0;0;0;8;8;8;8" dur="16s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="190" y="158" font-size="8" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;0;1;1;1;1" dur="16s" repeatCount="indefinite"/>
+                            10K
+                        </text>
+                    </g>
+                    
+                    <!-- Execution 5 -->
+                    <g class="algo-exec-5">
+                        <circle cx="220" cy="168" r="0" fill="#28a745" opacity="0.7">
+                            <animate attributeName="r" values="0;0;0;0;0;8;8;8" dur="16s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="220" y="155" font-size="8" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;0;0;1;1;1" dur="16s" repeatCount="indefinite"/>
+                            10K
+                        </text>
+                    </g>
+                    
+                    <!-- Execution 6 -->
+                    <g class="algo-exec-6">
+                        <circle cx="250" cy="170" r="0" fill="#28a745" opacity="0.7">
+                            <animate attributeName="r" values="0;0;0;0;0;0;8;8" dur="16s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="250" y="157" font-size="8" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" dur="16s" repeatCount="indefinite"/>
+                            10K
+                        </text>
+                    </g>
+                    
+                    <!-- Execution 7 -->
+                    <g class="algo-exec-7">
+                        <circle cx="280" cy="169" r="0" fill="#28a745" opacity="0.7">
+                            <animate attributeName="r" values="0;0;0;0;0;0;0;8" dur="16s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="280" y="156" font-size="8" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1" dur="16s" repeatCount="indefinite"/>
+                            10K
+                        </text>
+                    </g>
+                    
+                    <!-- Total Order Label -->
+                    <rect x="140" y="40" width="120" height="35" fill="#fff" stroke="#667eea" stroke-width="1.5" rx="5" opacity="0.95"/>
+                    <text x="200" y="55" font-size="10" fill="#667eea" font-weight="bold" text-anchor="middle">أمر كلي: 100,000 سهم</text>
+                    <text x="200" y="68" font-size="9" fill="#666" text-anchor="middle">يتقسم → 10 أوامر × 10K</text>
+                    
+                    <!-- Progress Bar -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0.9;0.9;0.9;0.9;0.9;0.9;0.9" dur="16s" repeatCount="indefinite"/>
+                        <rect x="100" y="250" width="200" height="8" fill="#e0e0e0" rx="4"/>
+                        <rect x="100" y="250" width="0" height="8" fill="#28a745" rx="4">
+                            <animate attributeName="width" values="0;28;56;84;112;140;168;200" dur="16s" repeatCount="indefinite"/>
+                        </rect>
+                        <text x="200" y="245" font-size="9" fill="#28a745" font-weight="bold" text-anchor="middle" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0;0;0;0;0;1" dur="16s" repeatCount="indefinite"/>
+                            ✓ تم تنفيذ 70,000 سهم
+                        </text>
+                    </g>
+                    
+                    <!-- Average Price Indicator -->
+                    <g opacity="0">
+                        <animate attributeName="opacity" values="0;0;0;0;0;0;0;1" dur="16s" repeatCount="indefinite"/>
+                        <line x1="100" y1="169" x2="280" y2="169" stroke="#ffc107" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="290" y="172" font-size="10" fill="#ffc107" font-weight="bold">متوسط: 101.0</text>
+                    </g>
+                    
+                    <!-- Info Messages -->
+                    <text x="200" y="265" font-size="10" fill="#1976d2" font-weight="bold" text-anchor="middle" opacity="0">
+                        <animate attributeName="opacity" values="1;0;0;0;0;0;0;0;1" dur="16s" repeatCount="indefinite"/>
+                        الخوارزمية توزع الأوامر على الوقت
+                    </text>
+                </svg>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color" style="background:#667eea;"></span> السعر (مستقر)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#28a745;"></span> تنفيذ تدريجي (10K لكل مرة)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#dc3545;"></span> أمر كبير واحد (يحرك السوق)</span>
+                    <span class="legend-item"><span class="legend-color" style="background:#ffc107;"></span> متوسط السعر النهائي</span>
+                </div>
+            </div>
             
             <p><strong>إيه هي؟</strong> Algo Orders (اختصار لـ Algorithmic Orders) هي أوامر بتستخدم برامج كمبيوتر متطورة عشان تنفذ صفقات كبيرة بطريقة ذكية ومنظمة، بحيث تقلل التأثير على السعر وتحصل على أفضل متوسط سعر.</p>
             
