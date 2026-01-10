@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الشموع اليابانية - تعليم تداول الأسهم</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+
+        /* Candlestick Anatomy */
+        .anatomy-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .candle-anatomy {
+            text-align: center;
+        }
+
+        .candle-svg {
+            width: 200px;
+            height: 400px;
+            margin: 20px auto;
+        }
+
+        .candle-part {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .candle-part:nth-child(1) { animation-delay: 0.2s; }
+        .candle-part:nth-child(2) { animation-delay: 0.5s; }
+        .candle-part:nth-child(3) { animation-delay: 0.8s; }
+        .candle-part:nth-child(4) { animation-delay: 1.1s; }
+
+        .label {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        /* Candlestick Patterns Grid */
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .pattern-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #2a5298;
+        }
+
+        .pattern-card h4 {
+            color: #1e3c72;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .candle-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 250px;
+            margin: 20px 0;
+            background: linear-gradient(to top, #f8f9fa 0%, transparent 100%);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .candle {
+            position: relative;
+            margin: 0 5px;
+            animation: growCandle 1.5s ease-out forwards;
+            transform-origin: bottom;
+        }
+
+        @keyframes growCandle {
+            from {
+                transform: scaleY(0);
+                opacity: 0;
+            }
+            to {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+        }
+
+        .candle-wick {
+            width: 2px;
+            background: #333;
+            margin: 0 auto;
+            animation: growWick 1s ease-out forwards;
+            transform-origin: bottom;
+        }
+
+        @keyframes growWick {
+            from {
+                transform: scaleY(0);
+            }
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        .candle-body {
+            width: 30px;
+            border: 2px solid;
+            animation: expandBody 1s ease-out 0.3s forwards;
+            transform-origin: bottom;
+            transform: scaleY(0);
+        }
+
+        @keyframes expandBody {
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        .bullish {
+            background: #26a69a;
+            border-color: #00897b;
+        }
+
+        .bearish {
+            background: #ef5350;
+            border-color: #c62828;
+        }
+
+        .neutral {
+            background: #ffd54f;
+            border-color: #ffa000;
+        }
+
+        .description {
+            font-size: 1.05em;
+            color: #555;
+            margin-top: 15px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .signal-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .bullish-signal {
+            background: #26a69a;
+            color: white;
+        }
+
+        .bearish-signal {
+            background: #ef5350;
+            color: white;
+        }
+
+        .neutral-signal {
+            background: #ffd54f;
+            color: #333;
+        }
+
+        /* Interactive Legend */
+        .legend {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid #333;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-right: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .info-box strong {
+            color: #1565c0;
+            font-size: 1.2em;
+        }
+
+        /* Animation Controls */
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.6em;
+            }
+            
+            .patterns-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🕯️ الشموع اليابانية</h1>
+        <p>دليل شامل لأنماط الشموع اليابانية</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="tools.html">أدوات التداول</a></li>
+            <li><a href="trading-charts.html">أنواع الشارتات الأساسية</a></li>
+            <li><a href="candlesticks.html" class="active">الشموع اليابانية</a></li>
+            <li><a href="indicators.html">المؤشرات الاقتصادية</a></li>            
+            <li><a href="orders.html">أنواع الأوامر</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
+        <!-- Introduction -->
+        <div class="card">
+            <h2>📖 ما هي الشموع اليابانية؟</h2>
+            <p>
+                <strong>الشموع اليابانية (Japanese Candlesticks)</strong> هي طريقة لعرض حركة السعر خلال فترة زمنية محددة. 
+                تم تطويرها في اليابان في القرن الـ18 لتداول الأرز، واليوم هي الطريقة الأكثر شيوعًا لقراءة الرسوم البيانية.
+            </p>
+            <p>
+                كل شمعة تحكي قصة كاملة: أين افتتح السعر، أين أغلق، أعلى وأدنى سعر وصل له خلال الفترة.
+            </p>
+        </div>
+
+        <!-- Candlestick Anatomy -->
+        <div class="card">
+            <h2>🔍 تشريح الشمعة</h2>
+        <div class="anatomy-container">
+            <!-- Bullish Candle -->
+            <div class="candle-anatomy">
+                <h3 style="color: #26a69a;">شمعة صاعدة (Bullish)</h3>
+                <svg class="candle-svg" viewBox="0 0 100 200">
+                    <!-- Upper Wick -->
+                    <line class="candle-part" x1="50" y1="10" x2="50" y2="60" 
+                          stroke="#333" stroke-width="2" 
+                          style="transform: translateY(20px);"/>
+                    <!-- Body -->
+                    <rect class="candle-part" x="30" y="60" width="40" height="80" 
+                          fill="#26a69a" stroke="#00897b" stroke-width="2"
+                          style="transform: translateY(20px);"/>
+                    <!-- Lower Wick -->
+                    <line class="candle-part" x1="50" y1="140" x2="50" y2="180" 
+                          stroke="#333" stroke-width="2"
+                          style="transform: translateY(20px);"/>
+                    
+                    <!-- Labels -->
+                    <text class="candle-part" x="75" y="15" font-size="10" fill="#666">أعلى سعر</text>
+                    <text class="candle-part" x="75" y="65" font-size="10" fill="#666">الإغلاق</text>
+                    <text class="candle-part" x="75" y="135" font-size="10" fill="#666">الافتتاح</text>
+                    <text class="candle-part" x="75" y="185" font-size="10" fill="#666">أدنى سعر</text>
+                </svg>
+                <div class="label">السعر أغلق أعلى من الافتتاح</div>
+                <span class="signal-badge bullish-signal">إشارة إيجابية</span>
+            </div>
+
+            <!-- Bearish Candle -->
+            <div class="candle-anatomy">
+                <h3 style="color: #ef5350;">شمعة هابطة (Bearish)</h3>
+                <svg class="candle-svg" viewBox="0 0 100 200">
+                    <!-- Upper Wick -->
+                    <line class="candle-part" x1="50" y1="10" x2="50" y2="60" 
+                          stroke="#333" stroke-width="2"
+                          style="transform: translateY(20px);"/>
+                    <!-- Body -->
+                    <rect class="candle-part" x="30" y="60" width="40" height="80" 
+                          fill="#ef5350" stroke="#c62828" stroke-width="2"
+                          style="transform: translateY(20px);"/>
+                    <!-- Lower Wick -->
+                    <line class="candle-part" x1="50" y1="140" x2="50" y2="180" 
+                          stroke="#333" stroke-width="2"
+                          style="transform: translateY(20px);"/>
+                    
+                    <!-- Labels -->
+                    <text class="candle-part" x="75" y="15" font-size="10" fill="#666">أعلى سعر</text>
+                    <text class="candle-part" x="75" y="65" font-size="10" fill="#666">الافتتاح</text>
+                    <text class="candle-part" x="75" y="135" font-size="10" fill="#666">الإغلاق</text>
+                    <text class="candle-part" x="75" y="185" font-size="10" fill="#666">أدنى سعر</text>
+                </svg>
+                <div class="label">السعر أغلق أقل من الافتتاح</div>
+                <span class="signal-badge bearish-signal">إشارة سلبية</span>
+            </div>
+        </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="card">
+            <div class="legend-item">
+                <div class="color-box bullish"></div>
+                <span><strong>شمعة صاعدة:</strong> الإغلاق > الافتتاح</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box bearish"></div>
+                <span><strong>شمعة هابطة:</strong> الإغلاق < الافتتاح</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box neutral"></div>
+                <span><strong>Doji:</strong> الإغلاق = الافتتاح</span>
+            </div>
+        </div>
+
+        <!-- Patterns Section -->
+        <div class="card">
+            <h2>📊 أنماط الشموع الشائعة</h2>
+
+        <div class="info-box">
+            <strong>💡 نصيحة:</strong>
+            مرر الماوس على أي كارت لرؤية الانيميشن. الأنماط تعطي إشارات أقوى لما تظهر عند مستويات دعم/مقاومة مهمة.
+        </div>
+
+        <div class="patterns-grid">
+            <!-- Doji -->
+            <div class="pattern-card">
+                <h4>Doji - الدوجي</h4>
+                <div class="candle-container">
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 100px;"></div>
+                        <div class="candle-body neutral" style="height: 5px; width: 30px;"></div>
+                        <div class="candle-wick" style="height: 80px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    سعر الإغلاق = سعر الافتتاح. يدل على تردد السوق وإمكانية انعكاس الاتجاه.
+                </div>
+                <span class="signal-badge neutral-signal">حيادي / انعكاس محتمل</span>
+            </div>
+
+            <!-- Hammer -->
+            <div class="pattern-card">
+                <h4>Hammer - المطرقة</h4>
+                <div class="candle-container">
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 20px;"></div>
+                        <div class="candle-body bullish" style="height: 40px; width: 30px;"></div>
+                        <div class="candle-wick" style="height: 120px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    جسم صغير في الأعلى مع ذيل طويل للأسفل. يظهر بعد هبوط ويشير لانعكاس صعودي.
+                </div>
+                <span class="signal-badge bullish-signal">صعودي</span>
+            </div>
+
+            <!-- Shooting Star -->
+            <div class="pattern-card">
+                <h4>Shooting Star - النجم الساقط</h4>
+                <div class="candle-container">
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 120px;"></div>
+                        <div class="candle-body bearish" style="height: 40px; width: 30px;"></div>
+                        <div class="candle-wick" style="height: 20px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    جسم صغير في الأسفل مع ذيل طويل للأعلى. يظهر بعد صعود ويشير لانعكاس هبوطي.
+                </div>
+                <span class="signal-badge bearish-signal">هبوطي</span>
+            </div>
+
+            <!-- Bullish Engulfing -->
+            <div class="pattern-card">
+                <h4>Bullish Engulfing - الابتلاع الصعودي</h4>
+                <div class="candle-container">
+                    
+                    <div class="candle" style="animation-delay: 0.3s;">
+                        <div class="candle-wick" style="height: 15px;"></div>
+                        <div class="candle-body bullish" style="height: 100px; width: 30px;"></div>
+                        <div class="candle-wick" style="height: 15px;"></div>
+                    </div>
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 20px;"></div>
+                        <div class="candle-body bearish" style="height: 60px; width: 25px;"></div>
+                        <div class="candle-wick" style="height: 20px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    شمعة صاعدة كبيرة "تبتلع" الشمعة الهابطة السابقة بالكامل. إشارة انعكاس صعودي قوية.
+                </div>
+                <span class="signal-badge bullish-signal">صعودي قوي</span>
+            </div>
+
+            <!-- Bearish Engulfing -->
+            <div class="pattern-card">
+                <h4>Bearish Engulfing - الابتلاع الهبوطي</h4>
+                <div class="candle-container">
+                    
+                    <div class="candle" style="animation-delay: 0.3s;">
+                        <div class="candle-wick" style="height: 15px;"></div>
+                        <div class="candle-body bearish" style="height: 100px; width: 30px;"></div>
+                        <div class="candle-wick" style="height: 15px;"></div>
+                    </div>
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 20px;"></div>
+                        <div class="candle-body bullish" style="height: 60px; width: 25px;"></div>
+                        <div class="candle-wick" style="height: 20px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    شمعة هابطة كبيرة "تبتلع" الشمعة الصاعدة السابقة بالكامل. إشارة انعكاس هبوطي قوية.
+                </div>
+                <span class="signal-badge bearish-signal">هبوطي قوي</span>
+            </div>
+
+            <!-- Morning Star -->
+            <div class="pattern-card">
+                <h4>Morning Star - نجمة الصباح</h4>
+                <div class="candle-container">
+                   <div class="candle" style="animation-delay: 0.6s;">
+                        <div class="candle-wick" style="height: 10px;"></div>
+                        <div class="candle-body bullish" style="height: 80px; width: 25px;"></div>
+                        <div class="candle-wick" style="height: 10px;"></div>
+                    </div>
+
+                    <div class="candle" style="animation-delay: 0.3s;">
+                        <div class="candle-wick" style="height: 35px;"></div>
+                        <div class="candle-body neutral" style="height: 20px; width: 20px;"></div>
+                        <div class="candle-wick" style="height: 35px;"></div>
+                    </div>
+                    
+                     <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 10px;"></div>
+                        <div class="candle-body bearish" style="height: 80px; width: 25px;"></div>
+                        <div class="candle-wick" style="height: 10px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    ثلاث شموع: هابطة، صغيرة (doji)، ثم صاعدة قوية. إشارة انعكاس صعودي بعد هبوط.
+                </div>
+                <span class="signal-badge bullish-signal">صعودي قوي</span>
+            </div>
+
+            <!-- Evening Star -->
+            <div class="pattern-card">
+                <h4>Evening Star - نجمة المساء</h4>
+                <div class="candle-container">
+                    <div class="candle" style="animation-delay: 0.6s;">
+                        <div class="candle-wick" style="height: 10px;"></div>
+                        <div class="candle-body bearish" style="height: 80px; width: 25px;"></div>
+                        <div class="candle-wick" style="height: 10px;"></div>
+                    </div>
+                    
+                    <div class="candle" style="animation-delay: 0.3s;">
+                        <div class="candle-wick" style="height: 35px;"></div>
+                        <div class="candle-body neutral" style="height: 20px; width: 20px;"></div>
+                        <div class="candle-wick" style="height: 35px;"></div>
+                    </div>
+
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 10px;"></div>
+                        <div class="candle-body bullish" style="height: 80px; width: 25px;"></div>
+                        <div class="candle-wick" style="height: 10px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    ثلاث شموع: صاعدة، صغيرة (doji)، ثم هابطة قوية. إشارة انعكاس هبوطي بعد صعود.
+                </div>
+                <span class="signal-badge bearish-signal">هبوطي قوي</span>
+            </div>
+
+            <!-- Piercing Line -->
+            <div class="pattern-card">
+                <h4>Piercing Line - الخط الثاقب</h4>
+                <div class="candle-container">
+                   
+                    <div class="candle" style="animation-delay: 0.3s;">
+                        <div class="candle-wick" style="height: 25px;"></div>
+                        <div class="candle-body bullish" style="height: 80px; width: 28px;"></div>
+                        <div class="candle-wick" style="height: 10px;"></div>
+                    </div>
+                     <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 15px;"></div>
+                        <div class="candle-body bearish" style="height: 90px; width: 28px;"></div>
+                        <div class="candle-wick" style="height: 15px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    الشمعة الصاعدة تخترق منتصف الشمعة الهابطة السابقة. إشارة انعكاس صعودي.
+                </div>
+                <span class="signal-badge bullish-signal">صعودي</span>
+            </div>
+
+            <!-- Dark Cloud Cover -->
+            <div class="pattern-card">
+                <h4>Dark Cloud Cover - الغيمة السوداء</h4>
+                <div class="candle-container">
+                   
+                    <div class="candle" style="animation-delay: 0.3s;">
+                        <div class="candle-wick" style="height: 10px;"></div>
+                        <div class="candle-body bearish" style="height: 80px; width: 28px;"></div>
+                        <div class="candle-wick" style="height: 25px;"></div>
+                    </div>
+
+                     <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 15px;"></div>
+                        <div class="candle-body bullish" style="height: 90px; width: 28px;"></div>
+                        <div class="candle-wick" style="height: 15px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    الشمعة الهابطة تخترق منتصف الشمعة الصاعدة السابقة. إشارة انعكاس هبوطي.
+                </div>
+                <span class="signal-badge bearish-signal">هبوطي</span>
+            </div>
+
+            <!-- Spinning Top -->
+            <div class="pattern-card">
+                <h4>Spinning Top - القمة الدوارة</h4>
+                <div class="candle-container">
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-wick" style="height: 70px;"></div>
+                        <div class="candle-body neutral" style="height: 30px; width: 25px;"></div>
+                        <div class="candle-wick" style="height: 70px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    جسم صغير مع ذيول طويلة من الجهتين. يدل على تردد وتساوي قوى العرض والطلب.
+                </div>
+                <span class="signal-badge neutral-signal">حيادي / تردد</span>
+            </div>
+
+            <!-- Marubozu Bullish -->
+            <div class="pattern-card">
+                <h4>Marubozu Bullish - ماروبوزو صعودي</h4>
+                <div class="candle-container">
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-body bullish" style="height: 140px; width: 32px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    شمعة بلا ذيول! افتتح عند الأدنى وأغلق عند الأعلى. زخم شرائي قوي جدًا.
+                </div>
+                <span class="signal-badge bullish-signal">صعودي قوي جدًا</span>
+            </div>
+
+            <!-- Marubozu Bearish -->
+            <div class="pattern-card">
+                <h4>Marubozu Bearish - ماروبوزو هبوطي</h4>
+                <div class="candle-container">
+                    <div class="candle" style="animation-delay: 0s;">
+                        <div class="candle-body bearish" style="height: 140px; width: 32px;"></div>
+                    </div>
+                </div>
+                <div class="description">
+                    شمعة بلا ذيول! افتتح عند الأعلى وأغلق عند الأدنى. ضغط بيعي قوي جدًا.
+                </div>
+                <span class="signal-badge bearish-signal">هبوطي قوي جدًا</span>
+            </div>
+        </div>
+        </div>
+
+        <!-- Key Points -->
+        <div class="card">
+            <h2>🎯 نقاط مهمة للتذكر</h2>
+        <div class="info-box">
+            <p style="font-size: 1.1em; margin: 10px 0;">
+                ✅ <strong>السياق مهم:</strong> نفس النمط قد يعطي إشارات مختلفة حسب الاتجاه العام والمستوى السعري.
+            </p>
+            <p style="font-size: 1.1em; margin: 10px 0;">
+                ✅ <strong>التأكيد ضروري:</strong> انتظر تأكيد النمط من الشمعة التالية قبل اتخاذ القرار.
+            </p>
+            <p style="font-size: 1.1em; margin: 10px 0;">
+                ✅ <strong>الحجم (Volume):</strong> الأنماط أقوى لما تكون مصحوبة بحجم تداول عالي.
+            </p>
+            <p style="font-size: 1.1em; margin: 10px 0;">
+                ✅ <strong>لا تعتمد عليها وحدها:</strong> استخدم الشموع مع أدوات أخرى (دعم/مقاومة، مؤشرات، إلخ).
+            </p>
+        </div>
+        </div>
+
+        <!-- Animation Controls -->
+        <div class="controls">
+            <button class="btn" onclick="restartAnimations()">🔄 إعادة تشغيل الانيميشن</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 موقع تعليم تداول الأسهم - محتوى تعليمي فقط</p>
+        <p>التداول في الأسواق المالية ينطوي على مخاطر - استثمر بحذر</p>
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2);">
+            <p style="margin: 0.5rem 0;"><strong>Ahmed Eltaher</strong></p>
+            <p style="margin: 0.5rem 0;">
+                <a href="https://wa.me/4915154346438" target="_blank" style="color: white; text-decoration: none;">
+                    📱 +4915154346438
+                </a>
+            </p>
+            <p style="margin: 0.5rem 0;">
+                <a href="mailto:ahmedmahmoud.eltaher@gmail.com" style="color: white; text-decoration: none;">
+                    ✉️ ahmedmahmoud.eltaher@gmail.com
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Restart all animations
+        function restartAnimations() {
+            const cards = document.querySelectorAll('.pattern-card');
+            cards.forEach(card => {
+                const candles = card.querySelectorAll('.candle, .candle-body, .candle-wick');
+                candles.forEach(element => {
+                    element.style.animation = 'none';
+                    element.offsetHeight; // Trigger reflow
+                    element.style.animation = null;
+                });
+            });
+        }
+
+        // Add hover effect to restart animation on each card
+        document.querySelectorAll('.pattern-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const candles = this.querySelectorAll('.candle, .candle-body, .candle-wick');
+                candles.forEach(element => {
+                    element.style.animation = 'none';
+                    element.offsetHeight;
+                    element.style.animation = null;
+                });
+            });
+        });
+
+        // Smooth scroll to patterns section
+        window.addEventListener('load', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.pattern-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease-out';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
