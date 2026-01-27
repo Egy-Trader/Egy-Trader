@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استراتيجيات التداول - تعليم تداول الأسهم</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .strategy-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .strategy-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .strategy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .strategy-card:hover::before {
+            width: 100%;
+            opacity: 0.05;
+        }
+
+        .strategy-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            font-size: 1.8em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .strategy-content {
+            flex: 1;
+        }
+
+        .strategy-header {
+            margin-bottom: 20px;
+        }
+
+        .strategy-title {
+            color: #667eea;
+            font-size: 1.6em;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+        }
+
+        .strategy-subtitle {
+            color: #764ba2;
+            font-size: 1.1em;
+            margin: 0 0 12px 0;
+            font-weight: 600;
+        }
+
+        .strategy-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .strategy-section {
+            margin: 0;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .strategy-section h4 {
+            color: #667eea;
+            font-size: 1em;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .strategy-section p {
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95em;
+        }
+
+        .icon {
+            font-size: 1.2em;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 5px 5px 5px 0;
+        }
+
+        .badge-trend {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-reversal {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-momentum {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .badge-breakout {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        /* Strategy Chart Animations */
+        .strategy-chart {
+            width: 100%;
+            max-width: 500px;
+            height: 200px;
+            margin: 20px auto;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: visible;
+        }
+
+        .chart-line {
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .price-line {
+            stroke: #667eea;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-out forwards;
+        }
+
+        .ma-line {
+            stroke: #ff6b6b;
+            stroke-width: 2;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 1s forwards;
+        }
+
+        .signal-line {
+            stroke: #51cf66;
+            stroke-width: 2;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 1.5s forwards;
+        }
+
+        .chart-candle {
+            opacity: 0;
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        .chart-arrow {
+            opacity: 0;
+            animation: bounceIn 0.8s ease-out forwards;
+        }
+
+        .support-line, .resistance-line {
+            stroke: #dee2e6;
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        .breakout-highlight {
+            fill: #ffd43b;
+            opacity: 0;
+            animation: pulse 2s ease-out 2s infinite;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .strategy-card:hover .chart-line,
+        .strategy-card:hover .chart-candle,
+        .strategy-card:hover .chart-arrow {
+            animation-play-state: running;
+        }
+
+        .intro-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .intro-box h2 {
+            color: white;
+            border: none;
+            margin: 0 0 15px 0;
+            padding: 0;
+        }
+
+        .intro-box p {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .strategy-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .strategy-number {
+                margin: 0 auto;
+            }
+
+            .strategy-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📊 استراتيجيات التداول</h1>
+        <p>أشهر 10 استراتيجيات تداول قابلة للتطبيق والاختبار</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="tools.html">أدوات التداول</a></li>
+            <li><a href="trading-charts.html">أنواع الشارتات الأساسية</a></li>
+            <li><a href="candlesticks.html">الشموع اليابانية</a></li>
+            <li><a href="strategies.html" class="active">استراتيجيات التداول</a></li>
+            <li><a href="indicators.html">المؤشرات الاقتصادية</a></li>            
+            <li><a href="orders.html">أنواع الأوامر</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="intro-box">
+            <h2>🎯 ما هي استراتيجية التداول؟</h2>
+            <p>
+                استراتيجية التداول هي خطة واضحة ومحددة تحدد متى تدخل الصفقة، متى تخرج، وكيف تدير المخاطر. 
+                الاستراتيجيات القوية قابلة للاختبار (Backtesting) على البيانات التاريخية للتأكد من فعاليتها.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>مهم:</strong> لا توجد استراتيجية مضمونة 100%. كل استراتيجية لها نقاط قوة وضعف وتناسب ظروف سوق معينة.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>📚 الاستراتيجيات العشر</h2>
+            <p>إليك أشهر استراتيجيات التداول المستخدمة من قبل المتداولين المحترفين حول العالم:</p>
+        </div>
+
+        <div class="strategy-grid">
+            <!-- Strategy 1: Moving Average Crossover -->
+            <div class="strategy-card">
+                <div class="strategy-number">1</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Moving Average Crossover</h3>
+                        <p class="strategy-subtitle">تقاطع المتوسطات المتحركة</p>
+                        <div>
+                            <span class="badge badge-trend">اتجاهية</span>
+                        </div>
+                    </div>
+
+                    <!-- Animated Chart for MA Crossover -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis (Price) -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="40" font-size="9" fill="#6c757d">$200</text>
+                            <text x="10" y="70" font-size="9" fill="#6c757d">$150</text>
+                            <text x="10" y="100" font-size="9" fill="#6c757d">$100</text>
+                            <text x="10" y="130" font-size="9" fill="#6c757d">$50</text>
+                            
+                            <!-- X-axis (Time) -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="80" y="145" font-size="9" fill="#6c757d">يناير</text>
+                            <text x="180" y="145" font-size="9" fill="#6c757d">فبراير</text>
+                            <text x="280" y="145" font-size="9" fill="#6c757d">مارس</text>
+                            
+                            <!-- Price Line -->
+                            <path class="chart-line price-line" d="M 40 100 Q 80 110, 110 85 T 180 75 Q 230 55, 280 38 T 390 28" style="animation-delay: 0s;"/>
+                            <text x="370" y="25" font-size="10" fill="#667eea" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">السعر</text>
+                            
+                            <!-- MA Short (50) -->
+                            <path class="chart-line ma-line" d="M 40 105 Q 90 108, 130 90 T 210 70 Q 260 55, 310 43 T 390 35" style="animation-delay: 1s;"/>
+                            <text x="360" y="38" font-size="10" fill="#ff6b6b" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 1.5s forwards;">MA(50)</text>
+                            
+                            <!-- MA Long (200) -->
+                            <path class="chart-line signal-line" d="M 40 110 Q 110 105, 150 95 T 230 80 Q 280 70, 330 60 T 390 50" style="animation-delay: 1.5s;"/>
+                            <text x="355" y="53" font-size="10" fill="#51cf66" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 2s forwards;">MA(200)</text>
+                            
+                            <!-- Golden Cross Point -->
+                            <circle cx="210" cy="70" r="8" fill="#51cf66" class="chart-arrow" style="animation-delay: 2.5s;"/>
+                            <text x="210" y="60" text-anchor="middle" font-size="12" fill="#51cf66" font-weight="bold" class="chart-arrow" style="animation-delay: 2.5s;">Golden Cross</text>
+                            
+                            <!-- Buy Zone (after crossover) -->
+            <rect x="210" y="20" width="170" height="110" fill="#e74c3c" opacity="0" style="animation: fadeIn 1s ease-out 3s forwards; opacity: 0.02;"/>
+                            <circle cx="210" cy="88" r="6" fill="#e74c3c" class="chart-arrow" style="animation-delay: 3.2s;"/>
+                            <path d="M 210 85 L 210 100" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 3.2s;"/>
+                            <path d="M 205 95 L 210 100 L 215 95" fill="#c92a2a" class="chart-arrow" style="animation-delay: 3.2s;"/>
+                            <text x="210" y="115" text-anchor="middle" font-size="10" fill="#c92a2a" font-weight="bold" class="chart-arrow" style="animation-delay: 3.2s;">اشتري</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>ركوب الترند من خلال مراقبة تقاطع متوسطين متحركين. تعتمد على مبدأ أن المتوسطات المتحركة تُظهر اتجاه السوق العام، وعندما يقطع المتوسط السريع فوق البطيء، فهذا يعني بداية ترند صاعد قوي.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p><strong>Golden Cross:</strong> عندما يقطع المتوسط القصير (مثلاً 20 يوم أو 50 يوم) فوق المتوسط الطويل (مثلاً 50 يوم أو 200 يوم). <strong>مثال:</strong> MA(50) تقطع فوق MA(200) = إشارة شراء قوية. يُفضل الانتظار حتى إغلاق الشمعة للتأكيد.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p><strong>Death Cross:</strong> عندما يحدث التقاطع العكسي (المتوسط القصير يقطع لأسفل). أو استخدام <strong>Trailing Stop</strong> عند 2-3% تحت المتوسط المتحرك القصير للحفاظ على الأرباح.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⏱️</span> الإطار الزمني</h4>
+                            <p>الأفضل: Daily و Weekly للمتداولين المتأرجحين (Swing Traders). يمكن استخدامها في 4H للمتداولين اليوميين لكن مع إشارات أكثر.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> المخاطر</h4>
+                            <p><strong>Whipsaw:</strong> إشارات كاذبة متكررة في الأسواق الجانبية (Sideways). قد تدخل وتخرج بخسائر صغيرة متعددة. <strong>الحل:</strong> استخدم فلتر إضافي مثل ADX > 25 للتأكد من وجود ترند قوي.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> نصيحة محترف</h4>
+                            <p>الجمع بين MA(50/200) للاتجاه العام + MA(9/21) على نفس الشارت للدخول المبكر. عندما يتفق التقاطعان معاً = إشارة قوية جداً!</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📊</span> مثال عملي</h4>
+                            <p>سهم Apple في أبريل 2023: MA(50) قطع فوق MA(200) عند $165، صعد السعر حتى $198 خلال 3 أشهر = ربح 20%. Death Cross حدث في أغسطس = وقت خروج.</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>معدل النجاح:</strong> 60-65% في الأسواق ذات الاتجاه الواضح | <strong>Risk/Reward:</strong> 1:2 إلى 1:3 ممكن مع إدارة جيدة</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 2: Breakout -->
+            <div class="strategy-card">
+                <div class="strategy-number">2</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Breakout Strategy</h3>
+                        <p class="strategy-subtitle">استراتيجية الاختراق</p>
+                        <div><span class="badge badge-breakout">اختراق</span></div>
+                    </div>
+
+                    <!-- Animated Chart for Breakout -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="35" font-size="9" fill="#6c757d">$300</text>
+                            <text x="10" y="60" font-size="9" fill="#6c757d">$250</text>
+                            <text x="10" y="85" font-size="9" fill="#6c757d">$200</text>
+                            <text x="10" y="110" font-size="9" fill="#6c757d">$150</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="100" y="145" font-size="9" fill="#6c757d">الأسبوع 1</text>
+                            <text x="220" y="145" font-size="9" fill="#6c757d">الأسبوع 2</text>
+                            
+                            <!-- Consolidation Zone -->
+                            <rect x="40" y="85" width="190" height="25" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards; opacity: 0.5;"/>
+                            <text x="135" y="102" text-anchor="middle" font-size="10" fill="#6c757d" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards;">منطقة التماسك</text>
+                            
+                            <!-- Resistance Line -->
+                            <line class="resistance-line" x1="30" y1="60" x2="330" y2="60" style="stroke: #e74c3c;"/>
+                            <text x="240" y="50" font-size="12" fill="#e74c3c" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">خط المقاومة $250</text>
+                            
+                            <!-- Price consolidation then breakout -->
+                            <path class="chart-line price-line" d="M 40 100 L 70 108 L 100 95 L 130 103 L 160 97 L 190 100 L 220 88 L 250 80 Q 280 60, 320 48 L 390 38" style="animation-delay: 0.5s;"/>
+                            <text x="360" y="35" font-size="10" fill="#667eea" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 1s forwards;">السعر</text>
+                            
+                            <!-- Breakout highlight -->
+                            <circle cx="250" cy="80" r="12" class="breakout-highlight" style="animation-delay: 2.5s;"/>
+                            <path d="M 250 65 L 255 50 L 245 50 Z" fill="#e74c3c" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <text x="250" y="45" text-anchor="middle" font-size="12" fill="#c92a2a" font-weight="bold" class="chart-arrow" style="animation-delay: 3s;">Breakout!</text>
+                            
+                            <!-- Buy Zone (after breakout) -->
+            <rect x="250" y="20" width="140" height="70" fill="#e74c3c" opacity="0" style="animation: fadeIn 1s ease-out 3.2s forwards; opacity: 0.02;"/>
+                            <circle cx="270" cy="78" r="6" fill="#e74c3c" class="chart-arrow" style="animation-delay: 3.5s;"/>
+                            <path d="M 270 75 L 270 90" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 3.5s;"/>
+                            <path d="M 265 85 L 270 90 L 275 85" fill="#c92a2a" class="chart-arrow" style="animation-delay: 3.5s;"/>
+                            <text x="270" y="105" text-anchor="middle" font-size="10" fill="#c92a2a" font-weight="bold" class="chart-arrow" style="animation-delay: 3.5s;">اشتري</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>الاستفادة من اختراق مستويات المقاومة أو كسر مستويات الدعم. عندما يكسر السعر مستوى مهم، غالباً يستمر بقوة بسبب تفعيل أوامر Stop Loss ودخول متداولين جدد.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p>إغلاق شمعة فوق المقاومة + حجم تداول أعلى 50% من المتوسط. الأفضل: انتظر إعادة اختبار (Retest) للمقاومة المكسورة كدعم جديد = نسبة نجاح 70%.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p><strong>Stop Loss:</strong> أسفل المقاومة المكسورة مباشرة (1-2%). <strong>Take Profit:</strong> مسافة مساوية لارتفاع النطاق. مثال: نطاق $100-$110، بعد كسر $110 = هدف $120.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> الاختراقات الكاذبة</h4>
+                            <p>40% من الاختراقات كاذبة! <strong>الحل:</strong> انتظر الإغلاق، تأكد من الحجم، استخدم <strong>فلتر 3%</strong>: ادخل إذا أغلق 3% فوق المقاومة.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📈</span> أفضل الظروف</h4>
+                            <p>الاختراق بعد تماسك طويل (3-6 أسابيع) = نجاح 70%. اختراق مع أخبار إيجابية = قوة مضاعفة. مثال: Tesla في 11/2023 كسر $250 = صعد $295 خلال أسبوعين.</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>قاعدة:</strong> "كلما طالت فترة التماسك، كان الاختراق أقوى" | Win Rate: 55-60% | R:R: 1:2+</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--Strategy 3: Support & Resistance Bounce -->
+            <div class="strategy-card">
+                <div class="strategy-number">3</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Support & Resistance Bounce</h3>
+                        <p class="strategy-subtitle">الارتداد من الدعم والمقاومة</p>
+                        <div><span class="badge badge-reversal">انعكاسية</span></div>
+                    </div>
+
+                    <!-- Animated Chart for S/R Bounce -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="40" font-size="9" fill="#6c757d">$180</text>
+                            <text x="10" y="75" font-size="9" fill="#6c757d">$140</text>
+                            <text x="10" y="110" font-size="9" fill="#6c757d">$100</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="120" y="145" font-size="9" fill="#6c757d">أسبوع 1</text>
+                            <text x="260" y="145" font-size="9" fill="#6c757d">أسبوع 2</text>
+                            
+                            <!-- Support Line -->
+                            <line class="support-line" x1="30" y1="110" x2="390" y2="110" style="stroke: #51cf66; stroke-width: 2;"/>
+                            <text x="300" y="125" font-size="12" fill="#c92a2a" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">خط الدعم $100</text>
+                            
+                            <!-- Resistance Line -->
+                            <line class="resistance-line" x1="30" y1="40" x2="390" y2="40" style="stroke: #e74c3c; stroke-width: 2;"/>
+                            <text x="280" y="30" font-size="12" fill="#e74c3c" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">خط المقاومة $180</text>
+                            
+                            <!-- Price bouncing between S/R -->
+                            <path class="chart-line price-line" d="M 40 75 Q 70 48, 100 42 Q 140 108, 180 105 Q 220 48, 260 40 Q 300 103, 340 108 Q 370 58, 390 48" style="animation-delay: 0.8s;"/>
+                            <text x="370" y="55" font-size="10" fill="#667eea" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 1.5s forwards;">السعر</text>
+                            
+                            <!-- Buy Signal at Support -->
+            <circle cx="180" cy="105" r="8" fill="#e74c3c" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <path d="M 180 105 L 180 88" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <path d="M 175 93 L 180 88 L 185 93" fill="#c92a2a" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <text x="180" y="80" text-anchor="middle" font-size="10" fill="#c92a2a" font-weight="bold" class="chart-arrow" style="animation-delay: 2.5s;">اشتري عند الدعم</text>
+                            <!-- Sell Signal at Resistance -->
+                            <circle cx="260" cy="40" r="8" fill="#2f9e44" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <path d="M 260 40 L 260 55" stroke="#51cf66" stroke-width="3" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <path d="M 255 50 L 260 55 L 265 50" fill="#2f9e44" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <text x="260" y="70" text-anchor="middle" font-size="10" fill="#51cf66" font-weight="bold" class="chart-arrow" style="animation-delay: 3s;">بيع عند المقاومة</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>الرهان على ارتداد السعر عند لمس مستويات دعم/مقاومة قوية. مبدأ "السعر له ذاكرة" - المستويات التي ارتد منها سابقاً غالباً يرتد منها مجدداً.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p>عند لمس مستوى دعم قوي (لمس 2-3 مرات سابقة) + ظهور نموذج انعكاسي (Hammer, Bullish Engulfing) + تأكيد RSI < 30 (تشبع بيع).</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p><strong>Target:</strong> مستوى المقاومة الأقرب. <strong>Stop Loss:</strong> أسفل الدعم بقليل (1-2%). إذا كسر الدعم = السعر غالباً يهبط بقوة.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🔍</span> كيف تحدد المستويات القوية</h4>
+                            <p><strong>1.</strong> قمم/قيعان تاريخية واضحة | <strong>2.</strong> لمس متعدد (3-5 مرات) | <strong>3.</strong> مستويات نفسية (أرقام مستديرة $100, $200) | <strong>4.</strong> Moving Averages طويلة (MA 200)</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> المخاطر</h4>
+                            <p><strong>Breakdown:</strong> الدعم يمكن كسره! لذلك Stop Loss ضروري. في الأسواق الهابطة بقوة، قد يكسر كل المستويات = تجنب الاستراتيجية في Downtrend قوي.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> نصيحة محترف</h4>
+                            <p>الجمع بين S/R + Fibonacci Retracement. عندما يتوافق مستوى دعم مع Fib 61.8% = مستوى قوي جداً للارتداد!</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 60-65% في الأسواق الجانبية | <strong>قاعدة:</strong> "كلما زاد عدد اللمسات، ضعف المستوى"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 4: Mean Reversion -->
+            <div class="strategy-card">
+                <div class="strategy-number">4</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Mean Reversion</h3>
+                        <p class="strategy-subtitle">الرجوع للمتوسط</p>
+                        <div><span class="badge badge-reversal">انعكاسية</span></div>
+                    </div>
+
+                    <!-- Animated Chart for Mean Reversion -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="30" font-size="9" fill="#6c757d">$120</text>
+                            <text x="10" y="75" font-size="9" fill="#6c757d">$100</text>
+                            <text x="10" y="120" font-size="9" fill="#6c757d">$80</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="100" y="145" font-size="9" fill="#6c757d">شهر 1</text>
+                            <text x="250" y="145" font-size="9" fill="#6c757d">شهر 2</text>
+                            
+                            <!-- Mean Line -->
+                            <line x1="30" y1="75" x2="390" y2="75" stroke="#667eea" stroke-width="2" stroke-dasharray="5,5" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards;"/>
+                            <text x="310" y="70" font-size="12" fill="#667eea" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">خط المتوسط $100</text>
+                            
+                            <!-- Price oscillating around mean -->
+                            <path class="chart-line price-line" d="M 40 75 Q 70 35, 100 40 Q 130 75, 160 70 Q 190 110, 220 105 Q 250 75, 280 70 Q 310 95, 340 90 Q 370 75, 390 75" style="animation-delay: 0.5s;"/>
+                            <text x="370" y="68" font-size="10" fill="#667eea" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 1s forwards;">السعر</text>
+                            
+                            <!-- Overbought Zone -->
+                            <rect x="70" y="30" width="50" height="15" fill="#d3f9d8" opacity="0" style="animation: fadeIn 1s ease-out 2.5s forwards; opacity: 0.5;"/>
+<circle cx="100" cy="40" r="6" fill="#2f9e44" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <text x="100" y="25" text-anchor="middle" font-size="10" fill="#51cf66" font-weight="bold" class="chart-arrow" style="animation-delay: 2.5s;">بيع - Overbought</text>
+            <path d="M 100 45 L 100 60" stroke="#51cf66" stroke-width="3" class="chart-arrow" style="animation-delay: 2.7s;"/>
+                            <path d="M 95 55 L 100 60 L 105 55" fill="#2f9e44" class="chart-arrow" style="animation-delay: 2.7s;"/>
+                            
+                            <!-- Oversold Zone -->
+                            <rect x="190" y="100" width="50" height="15" fill="#ffe3e3" opacity="0" style="animation: fadeIn 1s ease-out 3s forwards; opacity: 0.5;"/>
+                            <circle cx="220" cy="105" r="6" fill="#e74c3c" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <text x="220" y="95" text-anchor="middle" font-size="10" fill="#c92a2a" font-weight="bold" class="chart-arrow" style="animation-delay: 3s;">اشتري - Oversold</text>
+                            <path d="M 220 100 L 220 85" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 3.2s;"/>
+                            <path d="M 215 90 L 220 85 L 225 90" fill="#c92a2a" class="chart-arrow" style="animation-delay: 3.2s;"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>السعر يميل للرجوع إلى متوسطه في الأسواق العرضية (غير الاتجاهية). "السعر مطاط" - كلما ابتعد عن المتوسط، كانت قوة الجذب للرجوع أقوى.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p>عند ابتعاد كبير عن المتوسط (مثلاً السعر 2-3 Standard Deviations تحت MA، أو خارج Bollinger Bands) + إشارة تأكيد (شمعة انعكاسية، RSI تشبع).</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p>عند رجوع السعر للمتوسط أو منتصف النطاق. <strong>مثال:</strong> إذا انحرف السعر 10% تحت MA(20)، الهدف = الرجوع لـ MA(20).</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📊</span> أفضل الأسواق</h4>
+                            <p><strong>ممتاز في:</strong> الأسواق الجانبية (Range-bound)، أسهم Blue Chip المستقرة، الفوركس في أوقات الهدوء. <strong>خطر في:</strong> الأسواق الاتجاهية القوية.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> الفخ الكبير</h4>
+                            <p><strong>"Catching a Falling Knife":</strong> في Downtrend قوي، السعر قد يستمر بالهبوط دون رجوع! <strong>الحل:</strong> استخدم فلتر ADX < 25 للتأكد أن السوق غير اتجاهي.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> مثال تطبيقي</h4>
+                            <p>سهم Microsoft يتداول عادة حول $300 ± 10%. عندما ينزل $270 (-10%) بدون سبب أساسي = فرصة Mean Reversion للشراء بهدف $300.</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 65-70% في الأسواق الجانبية | <strong>تحذير:</strong> لا تستخدمها أبداً في Trending Markets!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 5: Bollinger Bands Reversion -->
+            <div class="strategy-card">
+                <div class="strategy-number">5</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Bollinger Bands Reversion</h3>
+                        <p class="strategy-subtitle">بولنجر الارتدادي</p>
+                        <div><span class="badge badge-reversal">انعكاسية</span></div>
+                    </div>
+
+                    <!-- Animated Chart for Bollinger Bands -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="40" font-size="9" fill="#6c757d">$110</text>
+                            <text x="10" y="75" font-size="9" fill="#6c757d">$100</text>
+                            <text x="10" y="110" font-size="9" fill="#6c757d">$90</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="150" y="145" font-size="9" fill="#6c757d">أسبوع 1</text>
+                            <text x="280" y="145" font-size="9" fill="#6c757d">أسبوع 2</text>
+                            
+                            <!-- Upper Band -->
+                            <path d="M 40 40 Q 120 35, 220 38 T 390 42" stroke="#e74c3c" stroke-width="2" fill="none" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;"/>
+                            <text x="340" y="35" font-size="10" fill="#e74c3c" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">Upper Band</text>
+                            
+                            <!-- Middle (SMA) -->
+                            <path d="M 40 75 Q 120 72, 220 75 T 390 77" stroke="#667eea" stroke-width="2" fill="none" opacity="0" style="animation: fadeIn 1s ease-out 0.7s forwards;"/>
+                            <text x="340" y="70" font-size="10" fill="#667eea" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.7s forwards;">SMA(20)</text>
+                            
+                            <!-- Lower Band -->
+                            <path d="M 40 110 Q 120 108, 220 112 T 390 115" stroke="#51cf66" stroke-width="2" fill="none" opacity="0" style="animation: fadeIn 1s ease-out 0.9s forwards;"/>
+                            <text x="340" y="120" font-size="10" fill="#51cf66" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.9s forwards;">Lower Band</text>
+                            
+                            <!-- Price touching bands -->
+                            <path class="chart-line price-line" d="M 40 75 Q 70 45, 100 40 Q 140 75, 180 72 Q 220 108, 260 110 Q 300 75, 340 73 Q 370 50, 390 45" style="animation-delay: 1.2s;"/>
+                            <text x="370" y="50" font-size="10" fill="#495057" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 1.5s forwards;">السعر</text>
+                            
+                            <!-- Sell at Upper Band -->
+            <circle cx="100" cy="40" r="6" fill="#2f9e44" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <path d="M 100 45 L 100 60" stroke="#51cf66" stroke-width="3" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <path d="M 95 55 L 100 60 L 105 55" fill="#2f9e44" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <text x="100" y="25" text-anchor="middle" font-size="10" fill="#51cf66" font-weight="bold" class="chart-arrow" style="animation-delay: 2.5s;">بيع</text>
+                            <!-- Buy at Lower Band -->
+                            <circle cx="260" cy="110" r="6" fill="#e74c3c" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <path d="M 260 105 L 260 90" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <path d="M 255 95 L 260 90 L 265 95" fill="#c92a2a" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <text x="260" y="85" text-anchor="middle" font-size="10" fill="#c92a2a" font-weight="bold" class="chart-arrow" style="animation-delay: 3s;">اشتري</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>استخدام نطاقات بولنجر لتحديد حالات التشبع الشرائي/البيعي. Bollinger Bands = SMA(20) ± 2 Standard Deviations. 95% من الوقت السعر يبقى داخل النطاق.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p><strong>شراء:</strong> إغلاق خارج الحد السفلي (Oversold) ثم رجوع داخل النطاق = إشارة شراء. <strong>بيع:</strong> إغلاق فوق الحد العلوي (Overbought) ثم رجوع = إشارة بيع.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p>عند الوصول لخط المنتصف (SMA 20) أو الحد العلوي. <strong>Risk/Reward:</strong> عادة 1:1.5 لأن الهدف قريب (middle band).</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🔍</span> إشارات إضافية</h4>
+                            <p><strong>Bollinger Squeeze:</strong> عندما يضيق النطاق جداً (Volatility منخفضة) = توقع حركة كبيرة قريباً. <strong>Breakout Alert:</strong> إذا كسر السعر فوق Upper Band بحجم = ممكن ترند جديد!</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> نصيحة محترف</h4>
+                            <p>الجمع بين Bollinger Bands + RSI. إذا لمس Lower Band + RSI<30 = إشارة شراء قوية جداً (double confirmation).</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> متى لا تستخدمها</h4>
+                            <p>في الترندات القوية، السعر يمكن أن يبقى ملامساً Upper/Lower Band لفترة طويلة = لا تفترض الرجوع فوراً!</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 60-65% | <strong>ملاحظة:</strong> استراتيجية متفرعة من Mean Reversion وسهلة الاختبار</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 6: RSI Swing -->
+            <div class="strategy-card">
+                <div class="strategy-number">6</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">RSI Swing</h3>
+                        <p class="strategy-subtitle">تذبذب مؤشر القوة النسبية</p>
+                        <div><span class="badge badge-momentum">زخم</span></div>
+                    </div>
+
+                    <!-- Animated Chart for RSI -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="18" y="15" font-size="11" fill="#495057" font-weight="bold">RSI</text>
+                            <text x="10" y="30" font-size="9" fill="#6c757d">100</text>
+                            <text x="10" y="75" font-size="9" fill="#6c757d">50</text>
+                            <text x="10" y="120" font-size="9" fill="#6c757d">0</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="150" y="145" font-size="9" fill="#6c757d">أسبوع 1</text>
+                            <text x="280" y="145" font-size="9" fill="#6c757d">أسبوع 2</text>
+                            
+                            <!-- Overbought Zone -->
+                            <rect x="30" y="10" width="360" height="20" fill="#ffe3e3" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards; opacity: 0.3;"/>
+                            <line x1="30" y1="30" x2="390" y2="30" stroke="#e74c3c" stroke-width="2" stroke-dasharray="3,3" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards;"/>
+                            <text x="350" y="25" font-size="11" fill="#e74c3c" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards;">70 - Overbought</text>
+                            
+                            <!-- Neutral Zone -->
+                            <line x1="30" y1="75" x2="390" y2="75" stroke="#667eea" stroke-width="1" stroke-dasharray="3,3" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;"/>
+                            <text x="360" y="70" font-size="10" fill="#667eea" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">50</text>
+                            
+                            <!-- Oversold Zone -->
+                            <rect x="30" y="110" width="360" height="20" fill="#d3f9d8" opacity="0" style="animation: fadeIn 1s ease-out 0.7s forwards; opacity: 0.3;"/>
+                            <line x1="30" y1="120" x2="390" y2="120" stroke="#51cf66" stroke-width="2" stroke-dasharray="3,3" opacity="0" style="animation: fadeIn 1s ease-out 0.7s forwards;"/>
+                            <text x="350" y="115" font-size="11" fill="#51cf66" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 0.7s forwards;">30 - Oversold</text>
+                            
+                            <!-- RSI Line -->
+                            <path class="chart-line price-line" d="M 40 75 Q 70 35, 100 25 Q 140 70, 180 75 Q 220 115, 260 122 Q 300 80, 340 75 Q 370 40, 390 30" style="animation-delay: 1s;"/>
+                            <text x="370" y="35" font-size="10" fill="#667eea" font-weight="bold" opacity="0" style="animation: fadeIn 1s ease-out 1.5s forwards;">خط RSI</text>
+                            
+                            <!-- Sell Signal (Overbought) -->
+            <circle cx="100" cy="25" r="6" fill="#2f9e44" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <path d="M 100 30 L 100 45" stroke="#51cf66" stroke-width="3" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <path d="M 95 40 L 100 45 L 105 40" fill="#2f9e44" class="chart-arrow" style="animation-delay: 2.5s;"/>
+            <text x="100" y="60" text-anchor="middle" font-size="10" fill="#51cf66" font-weight="bold" class="chart-arrow" style="animation-delay: 2.5s;">بيع</text>
+                            <!-- Buy Signal (Oversold) -->
+                            <circle cx="260" cy="122" r="6" fill="#e74c3c" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <path d="M 260 117 L 260 102" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <path d="M 255 107 L 260 102 L 265 107" fill="#c92a2a" class="chart-arrow" style="animation-delay: 3s;"/>
+                            <text x="260" y="95" text-anchor="middle" font-size="10" fill="#c92a2a" font-weight="bold" class="chart-arrow" style="animation-delay: 3s;">اشتري</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>استخدام RSI (Relative Strength Index) لتحديد مناطق التشبع وفرص الانعكاس. RSI = مؤشر زخم يقيس سرعة وحجم تغيرات السعر (0-100).</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p><strong>شراء:</strong> RSI أقل من 30 (oversold) ثم يرجع فوق 30 = إشارة صعود. <strong>بيع:</strong> RSI أعلى من 70 (overbought) ثم ينزل تحت 70 = إشارة هبوط.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p>عند وصول RSI لمستوى 50 (الوسط) أو هدف ربح محدد مسبقاً. <strong>Stop Loss:</strong> مستوى دعم/مقاومة قريب.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🔍</span> RSI Divergence</h4>
+                            <p><strong>إشارة قوية!</strong> <strong>Bullish:</strong> السعر يعمل قاع أقل لكن RSI يعمل قاع أعلى = احتمال انعكاس صعودي. <strong>Bearish:</strong> العكس = احتمال هبوط.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> تعديل متقدم</h4>
+                            <p>في الترندات القوية، عدّل المستويات: <strong>Uptrend:</strong> شراء عند RSI 40-50 (stronger oversold). <strong>Downtrend:</strong> بيع عندRSI 60-50.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> فخ شائع</h4>
+                            <p>RSI < 30 لا يعني "اشتري حالاً"! يمكن أن يبقى oversold لفترة طويلة في Downtrend. انتظر إشارة الرجوع (عبور 30 لأعلى).</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 60-65% | <strong>ملاحظة:</strong> RSI أداة شائعة جداً في Mean Reversion + Divergence قوية للتنبؤ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 7: MACD Trend/Momentum -->
+            <div class="strategy-card">
+                <div class="strategy-number">7</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">MACD Strategy</h3>
+                        <p class="strategy-subtitle">استراتيجية الماكد للزخم</p>
+                        <div>
+                            <span class="badge badge-momentum">زخم</span>
+                            <span class="badge badge-trend">اتجاهية</span>
+                        </div>
+                    </div>
+
+                    <!-- Animated Chart for MACD -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="12" y="15" font-size="11" fill="#495057" font-weight="bold">MACD</text>
+                            <text x="10" y="40" font-size="9" fill="#6c757d">+20</text>
+                            <text x="10" y="75" font-size="9" fill="#6c757d">0</text>
+                            <text x="10" y="110" font-size="9" fill="#6c757d">-20</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="100" y="145" font-size="9" fill="#6c757d">يناير</text>
+                            <text x="240" y="145" font-size="9" fill="#6c757d">فبراير</text>
+                            
+                            <!-- Zero Line -->
+                            <line x1="30" y1="75" x2="390" y2="75" stroke="#adb5bd" stroke-width="1" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards;"/>
+                            <text x="10" y="72" font-size="10" fill="#adb5bd" opacity="0" style="animation: fadeIn 1s ease-out 0.3s forwards;">0</text>
+                            <!-- MACD Line -->
+                            <path class="chart-line price-line" d="M 40 90 Q 80 95, 120 80 Q 170 65, 220 50 Q 270 55, 320 45 T 390 40" style="stroke: #667eea; animation-delay: 0.5s;"/>
+                            <!-- Signal Line -->
+                            <path class="chart-line ma-line" d="M 40 95 Q 90 98, 130 85 Q 180 70, 230 60 Q 280 62, 330 55 T 390 50" style="stroke: #ff6b6b; animation-delay: 1s;"/>
+                            <!-- Histogram bars -->
+                            <rect x="100" y="75" width="4" height="8" fill="#e74c3c" class="chart-candle" style="animation-delay: 1.5s;"/>
+                            <rect x="140" y="70" width="4" height="12" fill="#e74c3c" class="chart-candle" style="animation-delay: 1.6s;"/>
+                            <rect x="180" y="68" width="4" height="15" fill="#e74c3c" class="chart-candle" style="animation-delay: 1.7s;"/>
+                            <rect x="220" y="65" width="4" height="18" fill="#e74c3c" class="chart-candle" style="animation-delay: 1.8s;"/>
+                            <!-- Crossover point -->
+                            <circle cx="120" cy="80" r="6" fill="#e74c3c" class="chart-arrow" style="animation-delay: 2.5s;"/>
+                            <text x="120" y="65" text-anchor="middle" font-size="10" fill="#c92a2a" class="chart-arrow" style="animation-delay: 2.5s;">Crossover</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>قياس الزخم والاتجاه باستخدام تقاطع خطوط MACD. MACD = الفرق بين EMA(12) - EMA(26) + Signal Line (EMA 9 للMACD). يجمع بين قوة المتوسطات وإشارات الزخم.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p><strong>1.</strong> عندما يقطع خط MACD فوق Signal Line (Bullish Crossover). <strong>2.</strong> عند عبور Zero Line لأعلى (أقوى!) = تأكيد الترند الصاعد.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p><strong>Bearish Crossover:</strong> MACD يقطع تحت Signal Line. أو ضعف واضح في الزخم (histogram يصغر). عبور Zero Line لأسفل = إشارة خروج قوية.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🔍</span> MACD Histogram</h4>
+                            <p>يظهر قوة الزخم. <strong>Increasing Bars:</strong> زخم يزداد = ترند يقوى. <strong>Decreasing:</strong> زخم يضعف = تحذير من انعكاس محتمل.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> MACD Divergence</h4>
+                            <p><strong>Bullish:</strong> السعر يعمل قاع أقل لكن MACD يعمل قاع أعلى = إشارة انعكاس قوية. <strong>Bearish:</strong> العكس. Divergence مع MACD موثوق أكثر من RSI!</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⏱️</span> أفضل الإعدادات</h4>
+                            <p><strong>الافتراضي:</strong> 12-26-9 (short/long/signal). <strong>Scalping:</strong> 5-13-5 إشارات أسرع. <strong>Swing Trading:</strong> 19-39-9 إشارات أبطأ لكن أقوى.</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 55-60% | <strong>ميزة:</strong> MACD يجمع الاتجاه + الزخم في مؤشر واحد مناسب لكل الأطر الزمنية</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 8: All-Time-High Breakout -->
+            <div class="strategy-card">
+                <div class="strategy-number">8</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">All-Time-High Breakout</h3>
+                        <p class="strategy-subtitle">اختراق القمم التاريخية</p>
+                        <div>
+                            <span class="badge badge-breakout">اختراق</span>
+                            <span class="badge badge-momentum">زخم</span>
+                        </div>
+                    </div>
+
+                    <!-- Animated Chart for ATH Breakout -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="30" font-size="9" fill="#6c757d">$300</text>
+                            <text x="10" y="65" font-size="9" fill="#6c757d">$250</text>
+                            <text x="10" y="100" font-size="9" fill="#6c757d">$200</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="100" y="145" font-size="9" fill="#6c757d">شهر 1</text>
+                            <text x="230" y="145" font-size="9" fill="#6c757d">شهر 2</text>
+                            
+                            <!-- Previous ATH Line -->
+                            <line x1="30" y1="65" x2="270" y2="65" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,5" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;"/>
+                            <text x="190" y="55" font-size="12" fill="#e74c3c" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">ATH سابق</text>
+                            <!-- Price approaching and breaking ATH -->
+                            <path class="chart-line price-line" d="M 40 105 Q 70 100, 100 88 Q 140 75, 180 70 Q 220 66, 260 63 Q 300 40, 340 30 L 390 20" style="animation-delay: 0.8s;"/>
+                            <!-- Breakout burst effect -->
+                            <circle cx="270" cy="63" r="15" fill="#ffd43b" opacity="0" style="animation: pulse 1.5s ease-out 2.5s infinite;"/>
+                            <path d="M 270 50 L 275 35 L 265 35 Z" fill="#e74c3c" class="chart-arrow" style="animation-delay: 2.8s;"/>
+                            <text x="270" y="30" text-anchor="middle" font-size="12" fill="#c92a2a" class="chart-arrow" style="animation-delay: 2.8s;">New ATH!</text>
+                            <!-- Volume bars (shifted down near x-axis) -->
+                            <rect x="260" y="115" width="8" height="15" fill="#667eea" class="chart-candle" style="animation-delay: 2.5s;"/>
+                            <rect x="270" y="105" width="8" height="25" fill="#667eea" class="chart-candle" style="animation-delay: 2.6s;"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>التداول عند كسر القمم التاريخية (ATH). عندما يصل السهم لأعلى قمة تاريخية، لا توجد مقاومة فوقه = غالباً يستمر بالصعود بزخم قوي.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p>إغلاق فوق أعلى قمة تاريخية (ATH) + <strong>متابعة الزخم:</strong> حجم تداول عالي + MACD إيجابي. <strong>الأفضل:</strong> كسر ATH بعد فترة تماسك أسفلها مباشرة.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p><strong>Trailing Stop:</strong> الأفضل لحماية الأرباح مع السماح بالاستمرار. مثلاً: 5-7% تحت أعلى قمة. أو عند كسر قاع سابق أو ضعف الزخم.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📈</span> لماذا تنجح؟</h4>
+                            <p><strong>1.</strong> لا مقاومة فوقية | <strong>2.</strong> FOMO (Fear of Missing Out) يجذب متداولين جدد | <strong>3.</strong> تغطية إعلامية | <strong>4.</strong> إعادة تقييم من المحللين.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> المخاطر</h4>
+                            <p><strong>Bull Trap:</strong> كسر كاذب ثم هبوط سريع. <strong>الحل:</strong> انتظر إغلاق يومي فوق ATH + تأكد من الحجم. لا تدخل عند أول لمس للATH.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">💼</span> مثال واقعي</h4>
+                            <p>Nvidia في 2023: كسر ATH عدة مرات، كل مرة = موجة صعود جديدة. من $300 إلى $500 خلال شهور بسبب AI boom + ATH breakouts.</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 60-70% مع الزخم القوي | <strong>قاعدة:</strong> "القمم الجديدة غالباً ما تؤدي لمزيد من الصعود"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 9: Momentum / Relative Strength -->
+            <div class="strategy-card">
+                <div class="strategy-number">9</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Momentum / Relative Strength</h3>
+                        <p class="strategy-subtitle">استراتيجية الزخم والقوة النسبية</p>
+                        <div><span class="badge badge-momentum">زخم</span></div>
+                    </div>
+
+                    <!-- Animated Chart for Momentum -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="30" font-size="9" fill="#6c757d">$150</text>
+                            <text x="10" y="75" font-size="9" fill="#6c757d">$100</text>
+                            <text x="10" y="120" font-size="9" fill="#6c757d">$50</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="120" y="145" font-size="9" fill="#6c757d">شهر 3</text>
+                            <text x="260" y="145" font-size="9" fill="#6c757d">شهر 6</text>
+                            
+                            <!-- Market Index (S&P 500) -->
+                            <path d="M 40 105 Q 120 100, 220 95 T 390 90" stroke="#adb5bd" stroke-width="2" fill="none" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;"/>
+                            <text x="330" y="85" font-size="10" fill="#adb5bd" opacity="0" style="animation: fadeIn 1s ease-out 0.5s forwards;">السوق</text>
+                            <!-- Strong momentum stock -->
+                            <path class="chart-line price-line" d="M 40 110 Q 120 90, 220 65 T 390 30" style="stroke: #e74c3c; stroke-width: 3; animation-delay: 0.8s;"/>
+                            <text x="315" y="25" font-size="10" fill="#c92a2a" opacity="0" style="animation: fadeIn 1s ease-out 2s forwards;">سهم قوي</text>
+                            <!-- Momentum arrows -->
+                            <path d="M 170 70 L 175 55" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 2.5s;"/>
+                            <path d="M 170 65 L 175 55 L 165 60" fill="#e74c3c" class="chart-arrow" style="animation-delay: 2.5s;"/>
+                            <path d="M 280 48 L 285 33" stroke="#c92a2a" stroke-width="3" class="chart-arrow" style="animation-delay: 2.8s;"/>
+                            <path d="M 280 43 L 285 33 L 275 38" fill="#e74c3c" class="chart-arrow" style="animation-delay: 2.8s;"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>"اللي بيجري غالباً بيكمل شوية" - الاستثمار في الأسهم الأقوى أداءً. مبدأ: الأسهم الصاعدة بقوة غالباً تستمر بسبب الزخم النفسي والمؤسسي.</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p>اختيار أسهم بأعلى أداء خلال فترة (3-12 شهر) + <strong>تأكيد الترند الصاعد:</strong> MA(50) فوق MA(200) + أسهم أقوى من السوق/القطاع (Relative Strength vs S&P 500).</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p>عند كسر الترند (MA crossover هبوطي) أو ضعف واضح في الزخم (underperformance vs السوق). <strong>Rebalance:</strong> شهرياً - ابيع الضعيف واشتري الأقوى.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🔍</span> كيف تقيس الMomentum</h4>
+                            <p><strong>1.</strong> Rate of Change (ROC): نسبة التغير % خلال فترة | <strong>2.</strong> Relative Strength vs Index | <strong>3.</strong> Price Performance: أسهم في Top 20% أداء | <strong>4.</strong> Moving Average Slope</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> نصيحة محترف</h4>
+                            <p>الجمع بين Momentum + Quality. لا تشتري أي سهم صاعد بقوة! اختر فقط أسهم بأساسيات جيدة (EPS growth, Strong Balance Sheet) + Momentum.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> المخاطر</h4>
+                            <p><strong>Momentum Crash:</strong> عند انعكاس السوق، الأسهم القوية غالباً تهبط أسرع وأقوى (overvalued). <strong>الحل:</strong> مراقبة صارمة + Stop Loss عند 7-10%.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📊</span> بحوث علمية</h4>
+                            <p>دراسات Fama-French أثبتت: Momentum Factor من أقوى Factors للأداء طويل الأجل. الأسهم الأقوى تتفوق على السوق بنسبة 8-12% سنوياً!</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 55-60% | <strong>ملاحظة:</strong> عكس Mean Reversion - هنا نراهن على استمرار الحركة | <strong>Horizon:</strong> 3-12 شهر</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 10: Pairs Trading -->
+            <div class="strategy-card">
+                <div class="strategy-number">10</div>
+                <div class="strategy-content">
+                    <div class="strategy-header">
+                        <h3 class="strategy-title">Pairs Trading</h3>
+                        <p class="strategy-subtitle">تداول الأزواج / المراجحة الإحصائية</p>
+                        <div><span class="badge badge-reversal">انعكاسية</span></div>
+                    </div>
+
+                    <!-- Animated Chart for Pairs Trading -->
+                    <div class="strategy-chart">
+                        <svg width="100%" height="100%" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Y-axis -->
+                            <line x1="30" y1="10" x2="30" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="15" y="15" font-size="11" fill="#495057" font-weight="bold">السعر</text>
+                            <text x="10" y="40" font-size="9" fill="#6c757d">$110</text>
+                            <text x="10" y="75" font-size="9" fill="#6c757d">$100</text>
+                            <text x="10" y="110" font-size="9" fill="#6c757d">$90</text>
+                            
+                            <!-- X-axis -->
+                            <line x1="30" y1="130" x2="390" y2="130" stroke="#495057" stroke-width="2"/>
+                            <text x="350" y="145" font-size="11" fill="#495057" font-weight="bold">الزمن</text>
+                            <text x="120" y="145" font-size="9" fill="#6c757d">شهر 1</text>
+                            <text x="260" y="145" font-size="9" fill="#6c757d">شهر 2</text>
+                            
+                            <!-- Stock A -->
+                            <path class="chart-line price-line" d="M 40 70 Q 100 75, 170 70 Q 240 65, 310 70 T 390 72" style="stroke: #667eea; animation-delay: 0.5s;"/>
+                            <text x="360" y="65" font-size="10" fill="#667eea" opacity="0" style="animation: fadeIn 1s ease-out 1.5s forwards;">سهم A</text>
+                            <!-- Stock B (diverging then converging) -->
+                            <path class="chart-line ma-line" d="M 40 75 Q 100 78, 170 85 Q 240 95, 310 80 T 390 75" style="stroke: #ff6b6b; animation-delay: 1s;"/>
+                            <text x="360" y="80" font-size="10" fill="#ff6b6b" opacity="0" style="animation: fadeIn 1s ease-out 2s forwards;">سهم B</text>
+                            <!-- Spread highlights -->
+                            <circle cx="240" cy="80" r="25" fill="none" stroke="#ffd43b" stroke-width="2" class="chart-arrow" style="animation-delay: 2.5s; opacity: 0.6;"/>
+                            <text x="240" y="120" text-anchor="middle" font-size="10" fill="#ffd43b" class="chart-arrow" style="animation-delay: 2.8s;">انحراف</text>
+                            <circle cx="310" cy="75" r="8" fill="#e74c3c" class="chart-arrow" style="animation-delay: 3.2s;"/>
+                            <text x="310" y="60" text-anchor="middle" font-size="10" fill="#c92a2a" class="chart-arrow" style="animation-delay: 3.2s;">رجوع</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="strategy-section" style="margin-bottom: 15px;">
+                        <h4><span class="icon">💡</span> الفكرة الأساسية</h4>
+                        <p>استغلال العلاقة بين سهمين مرتبطين عندما تنحرف عن الطبيعي. <strong>Cointegration:</strong> سهمين يتحركون معاً غالباً، لكن أحياناً ينحرفون = فرصة تداول!</p>
+                    </div>
+
+                    <div class="strategy-details">
+                        <div class="strategy-section">
+                            <h4><span class="icon">📥</span> نقطة الدخول</h4>
+                            <p>عندما يخرج فرق السعر (السبريد) بين السهمين عن نطاقه (<strong>Z-score > 2</strong>). <strong>إجراء:</strong> بيع الأغلى (overperformer) + شراء الأرخص (underperformer) = Market Neutral.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">📤</span> نقطة الخروج</h4>
+                            <p>عند رجوع السبريد لمتوسطه الطبيعي (Z-score قريب من 0). <strong>Stop Loss:</strong> إذا زاد Z-score > 3 (divergence مستمر) = ممكن العلاقة انكسرت.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🔍</span> كيف تختار الأزواج</h4>
+                            <p><strong>1.</strong> نفس القطاع (PepsiCo vs Coca-Cola) | <strong>2.</strong> Correlation > 0.8 | <strong>3.</strong> Cointegration Test (Augmented Dickey-Fuller) | <strong>4.</strong> أمثلة: Gold vs Silver, GM vs Ford, Visa vs Mastercard</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">🎯</span> ميزة كبرى</h4>
+                            <p><strong>Market Neutral:</strong> لا تهتم إذا السوق صاعد أو هابط! تربح من الفرق بين السهمين. <strong>Lower Risk:</strong> موازنة Long/Short = مخاطر أقل من شراء سهم واحد.</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">⚠️</span> متطلبات متقدمة</h4>
+                            <p><strong>1.</strong> مهارات إحصائية (Python/R) | <strong>2.</strong> Backtesting متقدم | <strong>3.</strong> قدرة Short Selling | <strong>4.</strong> مراقبة مستمرة للCorrelation. ليست للمبتدئين!</p>
+                        </div>
+
+                        <div class="strategy-section">
+                            <h4><span class="icon">💼</span> استخدام عملي</h4>
+                            <p><strong>صناديق التحوط:</strong> Renaissance Technologies, Citadel يستخدمون Pairs Trading بكثافة. <strong>Win Rate:</strong> 55-60% لكن بمخاطرة منخفضة = Sharpe Ratio ممتاز.</p>
+                        </div>
+                    </div>
+
+                    <div class="note-box" style="margin-top: 15px;">
+                        <p><strong>Win Rate:</strong> 55-60% | <strong>ملاحظة:</strong> استراتيجية كمية متقدمة، تحتاج coding + إحصاء | <strong>Benefit:</strong> Market Neutral Strategy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="card">
+            <h2>⚠️ نقاط مهمة قبل تطبيق أي استراتيجية</h2>
+            <div class="highlight-box">
+                <p><strong>1. الباكتستينج (Backtesting):</strong> اختبر الاستراتيجية على بيانات تاريخية قبل استخدامها بأموال حقيقية</p>
+            </div>
+            <div class="highlight-box">
+                <p><strong>2. إدارة المخاطر:</strong> لا تخاطر بأكثر من 1-2% من رأس مالك في صفقة واحدة</p>
+            </div>
+            <div class="highlight-box">
+                <p><strong>3. التكيف مع السوق:</strong> كل استراتيجية تناسب ظروف سوق معينة (اتجاهي / عرضي / متقلب)</p>
+            </div>
+            <div class="highlight-box">
+                <p><strong>4. الانضباط:</strong> التزم بقواعد الاستراتيجية ولا تتخذ قرارات عاطفية</p>
+            </div>
+            <div class="highlight-box">
+                <p><strong>5. التحسين المستمر:</strong> راقب نتائجك وعدّل الاستراتيجية حسب الحاجة</p>
+            </div>
+        </div>
+
+        <!-- Resources -->
+        <div class="card">
+            <h2>📖 للتعلم أكثر</h2>
+            <p>لتطبيق هذه الاستراتيجيات بنجاح، استخدم:</p>
+            <ul>
+                <li><strong>أدوات التداول:</strong> منصات الباكتستينج وأدوات التحليل الفني</li>
+                <li><strong>أنماط الشارتات:</strong> لتحديد نقاط الدخول والخروج بدقة</li>
+                <li><strong>المؤشرات الاقتصادية:</strong> لفهم السياق الاقتصادي العام</li>
+                <li><strong>أنواع الأوامر:</strong> لتنفيذ الاستراتيجية بشكل صحيح</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 موقع تعليم تداول الأسهم - محتوى تعليمي فقط</p>
+        <p>التداول في الأسواق المالية ينطوي على مخاطر - استثمر بحذر</p>
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2);">
+            <p style="margin: 0.5rem 0;"><strong>Ahmed Eltaher</strong></p>
+            <p style="margin: 0.5rem 0;">
+                <a href="https://wa.me/4915154346438" target="_blank" style="color: white; text-decoration: none;">
+                    📱 +4915154346438
+                </a>
+            </p>
+            <p style="margin: 0.5rem 0;">
+                <a href="mailto:ahmedmahmoud.eltaher@gmail.com" style="color: white; text-decoration: none;">
+                    ✉️ ahmedmahmoud.eltaher@gmail.com
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
