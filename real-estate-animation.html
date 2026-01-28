@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation - دورة العقارات 18 سنة</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        .animation-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 1200px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        canvas {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            cursor: pointer;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            min-width: 150px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+        
+        .phase-info {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            min-height: 200px;
+            transition: all 0.5s;
+        }
+        
+        .phase-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .phase-info p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .timeline-item {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🏠 Animation - دورة العقارات 18 سنة</h1>
+        <p>شاهد كيف تتحرك الأسواق العقارية عبر الزمن</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="real-estate-cycle.html">دورة العقارات 18 سنة</a></li>
+            <li><a href="Banner-cycles.html">دورة بينر</a></li>
+            <li><a href="cycles-hub.html">الدورات الاقتصادية</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="animation-container">
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">
+                📊 دورة سوق العقارات - 18 سنة
+            </h2>
+            
+            <canvas id="cycleCanvas" width="1100" height="600"></canvas>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-primary" onclick="startAnimation()">▶️ ابدأ Animation</button>
+                <button class="btn btn-secondary" onclick="pauseAnimation()">⏸️ وقف مؤقت</button>
+                <button class="btn btn-success" onclick="resetAnimation()">🔄 إعادة تشغيل</button>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #28a745;"></div>
+                    <span>التعافي (Recovery)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #17a2b8;"></div>
+                    <span>التوسع (Expansion)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffc107;"></div>
+                    <span>التباطؤ النصفي (Mid-Cycle)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #dc3545;"></div>
+                    <span>الجنون (Boom)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #5c6bc0;"></div>
+                    <span>الانهيار (Crash)</span>
+                </div>
+            </div>
+            
+            <div id="phaseInfo" class="phase-info" style="background: #f8f9fa; border-right: 4px solid #667eea;">
+                <h3>👆 اضغط "ابدأ Animation" لبدء العرض</h3>
+                <p>سيتم عرض المراحل الخمسة لدورة العقارات 18 سنة مع الأمثلة التاريخية والتوقعات المستقبلية.</p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <h2>📖 كيف تستخدم هذا الـ Animation؟</h2>
+            <ul style="font-size: 1.1rem; line-height: 2;">
+                <li><strong>اضغط "ابدأ Animation":</strong> لرؤية كيف تتطور الدورة مرحلة بمرحلة</li>
+                <li><strong>راقب الألوان:</strong> كل لون يمثل مرحلة مختلفة من الدورة</li>
+                <li><strong>تابع السنوات:</strong> ستظهر الأمثلة التاريخية (1972، 1989، 2008) والتوقعات (2025-2030)</li>
+                <li><strong>اقرأ الشرح:</strong> أسفل الرسم البياني ستجد شرح تفصيلي لكل مرحلة</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 دليل التداول المصري - جميع الحقوق محفوظة</p>
+        <p style="margin-top: 10px;">Ahmed Eltaher | +4915154346438 | ahmedmahmoud.eltaher@gmail.com</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('cycleCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let animationFrame = 0;
+        let maxFrames = 550;
+        let isPlaying = false;
+        let animationId = null;
+        let currentPhase = 0;
+        
+        // مراحل الدورة - 18 سنة إجمالي
+        const phases = [
+            {
+                name: "التعافي - Recovery",
+                duration: 3.5, // سنين
+                color: "#28a745",
+                background: "#d4edda",
+                borderColor: "#28a745",
+                description: "المرحلة الأولى (3-4 سنين): السوق يتعافى من الأزمة. الأسعار منخفضة، الناس خايفة، والفرص ذهبية للمستثمرين الأذكياء.",
+                examples: "📅 حصلت في: 2009-2012 (بعد أزمة 2008) | 1992-1995 (بعد أزمة 1989)",
+                future: "🔮 متوقعة: 2031-2034"
+            },
+            {
+                name: "التوسع - Expansion",
+                duration: 6.5, // سنين
+                color: "#17a2b8",
+                background: "#d1ecf1",
+                borderColor: "#17a2b8",
+                description: "المرحلة الثانية (6-7 سنين): الاقتصاد ينمو، القروض سهلة، الأسعار تطلع بثبات. الكل بيشتري ومتفائل. استثمار آمن نسبياً.",
+                examples: "📅 حصلت في: 2013-2019 | 1996-2002",
+                future: "🔮 متوقعة: 2035-2041"
+            },
+            {
+                name: "التباطؤ النصفي - Mid-Cycle Slowdown",
+                duration: 1.5, // سنين
+                color: "#ffc107",
+                background: "#fff3cd",
+                borderColor: "#ffc107",
+                description: "المرحلة الثالثة (1-2 سنة): تباطؤ مؤقت - الأسعار تستقر أو تنزل قليلاً. مرحلة خادعة! الناس تظن الأزمة عدّت، لكن دي مجرد بروفة.",
+                examples: "📅 حصلت في: 2019 (تباطؤ قبل كورونا) | 2003-2004",
+                future: "🔮 متوقعة: 2042-2043"
+            },
+            {
+                name: "الجنون - Boom / Winner's Curse",
+                duration: 2.5, // سنين
+                color: "#dc3545",
+                background: "#f8d7da",
+                borderColor: "#dc3545",
+                description: "المرحلة الرابعة (2-3 سنين): 💣 أخطر مرحلة! الأسعار تطير، الكل بيشتري بجنون، 'العقار لا ينهار'. الطمع في ذروته. المحترفين بيبيعوا والمبتدئين بيشتروا!",
+                examples: "📅 حصلت في: 2005-2007 (قبل أزمة 2008) | 1987-1989",
+                future: "🔮 متوقعة: 2024-2026 ⚠️"
+            },
+            {
+                name: "الانهيار - Crash & Recession",
+                duration: 4, // سنين
+                color: "#5c6bc0",
+                background: "#e8eaf6",
+                borderColor: "#5c6bc0",
+                description: "المرحلة الخامسة (3-4 سنين): الفقاعة تنفجر! 💥 الأسعار تنهار، القروض تتوقف، الناس تبيع بالخسارة. لكن... هنا فرصة الأغنياء! اللي معاه كاش يشتري بأرخص الأسعار.",
+                examples: "📅 حصلت في: 2008-2011 (الأزمة العالمية) | 1990-1993",
+                future: "🔮 متوقعة: 2027-2030"
+            }
+        ];
+        
+        function drawChart() {
+            // مسح Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // رسم المحاور والشبكة
+            drawGrid();
+            drawAxes();
+            
+            // رسم منحنى الدورة
+            drawCycle();
+            
+            // رسم النقطة الحالية والمعلومات
+            drawCurrentPoint();
+            
+            // رسم أسماء المراحل
+            drawPhaseLabels();
+        }
+        
+        function drawGrid() {
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            
+            // خطوط أفقية
+            for (let i = 0; i <= 10; i++) {
+                const y = 50 + (i * 50);
+                ctx.beginPath();
+                ctx.moveTo(80, y);
+                ctx.lineTo(1020, y);
+                ctx.stroke();
+            }
+            
+            // خطوط رأسية
+            for (let i = 0; i <= 18; i++) {
+                const x = 80 + (i * 52);
+                ctx.beginPath();
+                ctx.moveTo(x, 50);
+                ctx.lineTo(x, 550);
+                ctx.stroke();
+            }
+        }
+        
+        function drawAxes() {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.font = 'bold 14px Arial';
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'center';
+            
+            // المحور الأفقي (الزمن - 18 سنة)
+            ctx.beginPath();
+            ctx.moveTo(80, 550);
+            ctx.lineTo(1020, 550);
+            ctx.stroke();
+            
+            // أرقام السنوات
+            for (let i = 0; i <= 18; i++) {
+                const x = 80 + (i * 52);
+                ctx.fillText(i + ' سنة', x, 575);
+            }
+            
+            // المحور الرأسي (السعر)
+            ctx.beginPath();
+            ctx.moveTo(80, 50);
+            ctx.lineTo(80, 550);
+            ctx.stroke();
+            
+            // عنوان المحور الرأسي
+            ctx.save();
+            ctx.translate(30, 300);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('أسعار العقارات', 0, 0);
+            ctx.restore();
+            
+            // عنوان المحور الأفقي
+            ctx.fillText('الوقت (18 سنة)', 550, 595);
+        }
+        
+        function drawCycle() {
+            let x = 80;
+            let y = 450; // نبدأ من مستوى منخفض (بعد أزمة)
+            let yearsPassed = 0;
+            
+            phases.forEach((phase, index) => {
+                const startX = x;
+                const startY = y;
+                const endX = x + (phase.duration * 52);
+                
+                // حساب نقطة النهاية لكل مرحلة
+                let endY;
+                if (index === 0) { // Recovery
+                    endY = 350;
+                } else if (index === 1) { // Expansion
+                    endY = 200;
+                } else if (index === 2) { // Mid-Cycle Slowdown
+                    endY = 250;
+                } else if (index === 3) { // Boom
+                    endY = 100;
+                } else { // Crash
+                    endY = 450;
+                }
+                
+                // رسم المنحنى
+                const segments = 50;
+                const frameProgress = Math.min(animationFrame / maxFrames, 1);
+                const phaseStart = yearsPassed / 18;
+                const phaseEnd = (yearsPassed + phase.duration) / 18;
+                
+                ctx.strokeStyle = phase.color;
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                
+                for (let i = 0; i <= segments; i++) {
+                    const t = i / segments;
+                    const currentX = startX + t * (endX - startX);
+                    const currentY = startY + t * (endY - startY);
+                    
+                    const globalProgress = phaseStart + (phaseEnd - phaseStart) * t;
+                    
+                    if (globalProgress <= frameProgress) {
+                        ctx.lineTo(currentX, currentY);
+                    }
+                }
+                
+                ctx.stroke();
+                
+                // تعبئة المساحة تحت المنحنى (إذا كان Animation وصل لهذه المرحلة)
+                if (frameProgress >= phaseEnd || (frameProgress >= phaseStart && index === currentPhase)) {
+                    ctx.globalAlpha = 0.2;
+                    ctx.fillStyle = phase.color;
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    
+                    for (let i = 0; i <= segments; i++) {
+                        const t = i / segments;
+                        const currentX = startX + t * (endX - startX);
+                        const currentY = startY + t * (endY - startY);
+                        ctx.lineTo(currentX, currentY);
+                    }
+                    
+                    ctx.lineTo(endX, 550);
+                    ctx.lineTo(startX, 550);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+                
+                x = endX;
+                y = endY;
+                yearsPassed += phase.duration;
+            });
+        }
+        
+        function drawPhaseLabels() {
+            ctx.font = 'bold 13px Arial';
+            ctx.textAlign = 'center';
+            
+            let x = 80;
+            let yearsPassed = 0;
+            
+            phases.forEach((phase, index) => {
+                const phaseWidth = phase.duration * 52;
+                const centerX = x + phaseWidth / 2;
+                
+                // عرض التسمية فقط إذا وصل Animation لهذه المرحلة
+                const frameProgress = animationFrame / maxFrames;
+                const phaseStart = yearsPassed / 18;
+                
+                if (frameProgress >= phaseStart) {
+                    ctx.fillStyle = phase.color;
+                    ctx.fillText(phase.name, centerX, 35);
+                    
+                    // عرض المدة
+                    ctx.font = '11px Arial';
+                    ctx.fillStyle = '#666';
+                    ctx.fillText(`(${phase.duration} سنة)`, centerX, 20);
+                    ctx.font = 'bold 13px Arial';
+                }
+                
+                x += phaseWidth;
+                yearsPassed += phase.duration;
+            });
+        }
+        
+        function drawCurrentPoint() {
+            const frameProgress = animationFrame / maxFrames;
+            
+            // حساب الموقع الحالي
+            let yearsPassed = 0;
+            let currentX = 80;
+            let currentY = 450;
+            
+            for (let i = 0; i < phases.length; i++) {
+                const phase = phases[i];
+                const phaseStart = yearsPassed / 18;
+                const phaseEnd = (yearsPassed + phase.duration) / 18;
+                
+                if (frameProgress >= phaseStart && frameProgress <= phaseEnd) {
+                    currentPhase = i;
+                    
+                    // حساب الموقع داخل المرحلة
+                    const phaseProgress = (frameProgress - phaseStart) / (phaseEnd - phaseStart);
+                    
+                    let startY, endY;
+                    if (i === 0) {
+                        startY = 450; endY = 350;
+                    } else if (i === 1) {
+                        startY = 350; endY = 200;
+                    } else if (i === 2) {
+                        startY = 200; endY = 250;
+                    } else if (i === 3) {
+                        startY = 250; endY = 100;
+                    } else {
+                        startY = 100; endY = 450;
+                    }
+                    
+                    currentX = 80 + (yearsPassed + phase.duration * phaseProgress) * 52;
+                    currentY = startY + phaseProgress * (endY - startY);
+                    
+                    break;
+                }
+                
+                yearsPassed += phase.duration;
+                
+                // تحديث Y للمرحلة التالية
+                if (i === 0) currentY = 350;
+                else if (i === 1) currentY = 200;
+                else if (i === 2) currentY = 250;
+                else if (i === 3) currentY = 100;
+                else currentY = 450;
+            }
+            
+            // رسم نقطة ساطعة
+            if (isPlaying) {
+                ctx.beginPath();
+                ctx.arc(currentX, currentY, 8, 0, Math.PI * 2);
+                ctx.fillStyle = phases[currentPhase].color;
+                ctx.fill();
+                
+                // دائرة خارجية متوهجة
+                ctx.beginPath();
+                ctx.arc(currentX, currentY, 15, 0, Math.PI * 2);
+                ctx.strokeStyle = phases[currentPhase].color;
+                ctx.lineWidth = 3;
+                ctx.globalAlpha = 0.5;
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+            
+            // تحديث معلومات المرحلة
+            updatePhaseInfo();
+        }
+        
+        function updatePhaseInfo() {
+            const infoBox = document.getElementById('phaseInfo');
+            const phase = phases[currentPhase];
+            
+            infoBox.style.background = phase.background;
+            infoBox.style.borderRightColor = phase.borderColor;
+            
+            infoBox.innerHTML = `
+                <h3 style="color: ${phase.color};">${phase.name}</h3>
+                <p><strong>المدة:</strong> ${phase.duration} سنة</p>
+                <p>${phase.description}</p>
+                <div class="timeline">
+                    <div class="timeline-item" style="border-right: 4px solid ${phase.color};">
+                        ${phase.examples}
+                    </div>
+                    <div class="timeline-item" style="border-right: 4px solid ${phase.color};">
+                        ${phase.future}
+                    </div>
+                </div>
+            `;
+            
+            // تحديث progress bar
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = (animationFrame / maxFrames * 100) + '%';
+        }
+        
+        function animate() {
+            if (!isPlaying) return;
+            
+            drawChart();
+            
+            animationFrame++;
+            if (animationFrame > maxFrames) {
+                animationFrame = maxFrames;
+                isPlaying = false;
+            }
+            
+            if (isPlaying) {
+                animationId = requestAnimationFrame(animate);
+            }
+        }
+        
+        function startAnimation() {
+            if (animationFrame >= maxFrames) {
+                animationFrame = 0;
+            }
+            isPlaying = true;
+            animate();
+        }
+        
+        function pauseAnimation() {
+            isPlaying = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+        
+        function resetAnimation() {
+            pauseAnimation();
+            animationFrame = 0;
+            currentPhase = 0;
+            drawChart();
+            
+            const infoBox = document.getElementById('phaseInfo');
+            infoBox.style.background = '#f8f9fa';
+            infoBox.style.borderRightColor = '#667eea';
+            infoBox.innerHTML = `
+                <h3>👆 اضغط "ابدأ Animation" لبدء العرض</h3>
+                <p>سيتم عرض المراحل الخمسة لدورة العقارات 18 سنة مع الأمثلة التاريخية والتوقعات المستقبلية.</p>
+            `;
+            
+            document.getElementById('progressBar').style.width = '0%';
+        }
+        
+        // رسم الشارت الأولي
+        drawChart();
+    </script>
+</body>
+</html>
